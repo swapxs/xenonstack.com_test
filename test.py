@@ -6,6 +6,7 @@ from selenium.webdriver.support.select import Select
 # from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+# https://github.com/Textualize/rich?tab=readme-ov-file
 from rich import print as printc
 import time
 
@@ -20,6 +21,7 @@ DRIVER.get("https://www.xenonstack.com/")
 
 
 def test_required_field():
+    # https://stackoverflow.com/questions/1278705/when-i-catch-an-exception-how-do-i-get-the-type-file-and-line-number
     try:
         DRIVER.refresh()
         time.sleep(2)
