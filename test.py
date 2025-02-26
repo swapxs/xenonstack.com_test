@@ -35,9 +35,10 @@ def test_required_field():
                "Required Filed Validation Test Passed")
 
     except Exception:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
+        exc_type, _, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        printc("[bold red][ ERROR ][/bold red]", exc_type, fname, exc_tb.tb_lineno)
+        printc("[bold red][ ERROR ][/bold red]",
+               exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_invalid_inputs():
@@ -61,9 +62,11 @@ def test_invalid_inputs():
                " Invalid Input Handling Test Passed")
 
     except Exception:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        printc("[bold red][ ERROR ][/bold red]", exc_type, fname, exc_tb.tb_lineno)
+        exc_type, _, exc_tb = sys.exc_info()
+        if exc_tb is not None:
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            printc("[bold red][ ERROR ][/bold red]",
+                exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_injection_SQL():
@@ -88,9 +91,10 @@ def test_injection_SQL():
                " SQL Injection Detection Test Passed")
 
     except Exception:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
+        exc_type, _, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        printc("[bold red][ ERROR ][/bold red]", exc_type, fname, exc_tb.tb_lineno)
+        printc("[bold red][ ERROR ][/bold red]",
+               exc_type, fname, exc_tb.tb_lineno)
 
 
 if __name__ == "__main__":
