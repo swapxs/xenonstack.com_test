@@ -9,28 +9,27 @@ from selenium.webdriver.chrome.options import Options
 from rich import print as printc
 import time
 
-options = Options()
-options.add_argument("--start-maximized")
-options.add_argument("--disable-blink-features=AutomationControlled")
-options.add_argument("--headless=new")  # Run headless
+OPT = Options()
+OPT.add_argument("--start-maximized")
+OPT.add_argument("--disable-blink-features=AutomationControlled")
+OPT.add_argument("--headless=new")  # Run headless
 
-service = Service("/usr/bin/chromedriver", log_output=None)
-driver = webdriver.Chrome(service=service, options=options)
-driver.get("https://www.xenonstack.com/")
-time.sleep(4)
+SERVICE = Service("/usr/bin/chromedriver", log_output=None)
+DRIVER = webdriver.Chrome(service=SERVICE, options=OPT)
+DRIVER.get("https://www.xenonstack.com/")
 
 
 def test_required_field():
     try:
-        driver.find_element(By.CLASS_NAME, "nav-button").click()
-        time.sleep(2)
+        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        time.sleep(1)
 
-        driver.find_element(By.XPATH,
+        DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        errors = driver.find_elements(By.CLASS_NAME, "error-message")
-        assert len(errors) > 0, "Error message did not appear"
+        err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
+        assert len(err) > 0, "Error message did not appear"
 
         printc("[bold green][ SUCCESS ][/bold green] Required Filed Validation Test Passed")
 
@@ -42,18 +41,18 @@ def test_required_field():
 
 def test_invalid_inputs():
     try:
-        driver.find_element(By.NAME, "firstname").send_keys("John123")
-        driver.find_element(By.NAME, "lastname").send_keys("Doe@#")
-        driver.find_element(By.NAME, "email").send_keys("invalidemail")
-        driver.find_element(By.NAME, "contact").send_keys("abcd1234")
-        driver.find_element(By.NAME, "company").send_keys("Null Company")
-        dropdown = Select(driver.find_element(By.ID, "enterpriseIndustry"))
+        DRIVER.find_element(By.NAME, "firstname").send_keys("John123")
+        DRIVER.find_element(By.NAME, "lastname").send_keys("Doe@#")
+        DRIVER.find_element(By.NAME, "email").send_keys("invalidemail")
+        DRIVER.find_element(By.NAME, "contact").send_keys("abcd1234")
+        DRIVER.find_element(By.NAME, "company").send_keys("Null Company")
+        dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
         dropdown.select_by_index(2)
 
-        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
+        DRIVER.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
 
-        errors = driver.find_elements(By.CLASS_NAME, "error-message")
-        assert len(errors) > 0, "Invalid inputs were accepted!"
+        err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
+        assert len(err) > 0, "Invalid inputs were accepted!"
 
         printc("[bold green][ SUCCESS ][/bold green] Invalid Input Handling Test Passed")
 
@@ -66,4 +65,4 @@ def test_invalid_inputs():
 if __name__ == "__main__":
     test_required_field()
     test_invalid_inputs()
-    driver.quit()
+    DRIVER.quit()
