@@ -36,9 +36,10 @@ def test_required_field():
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        printc("[bold red][ ERROR ][/bold red]",
-               exc_type, fname, exc_tb.tb_lineno)
+        if exc_tb is not None:
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            printc("[bold red][ ERROR ][/bold red]",
+                   exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_invalid_inputs():
@@ -66,7 +67,7 @@ def test_invalid_inputs():
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             printc("[bold red][ ERROR ][/bold red]",
-                exc_type, fname, exc_tb.tb_lineno)
+                   exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_injection_SQL():
@@ -92,9 +93,10 @@ def test_injection_SQL():
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        printc("[bold red][ ERROR ][/bold red]",
-               exc_type, fname, exc_tb.tb_lineno)
+        if exc_tb is not None:
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            printc("[bold red][ ERROR ][/bold red]",
+                   exc_type, fname, exc_tb.tb_lineno)
 
 
 if __name__ == "__main__":
