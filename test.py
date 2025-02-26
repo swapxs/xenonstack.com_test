@@ -6,12 +6,13 @@ from selenium.webdriver.support.select import Select
 # from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from rich import print as printc
 import time
 
 options = Options()
 options.add_argument("--start-maximized")
 options.add_argument("--disable-blink-features=AutomationControlled")
-# options.add_argument("--headless=new")  # Run headless
+options.add_argument("--headless=new")  # Run headless
 
 service = Service("/usr/bin/chromedriver", log_output=None)
 driver = webdriver.Chrome(service=service, options=options)
@@ -27,17 +28,16 @@ def test_required_field():
         driver.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
-        time.sleep(2)
 
         errors = driver.find_elements(By.CLASS_NAME, "error-message")
         assert len(errors) > 0, "Error message did not appear"
 
-        print("SUCCESS: Required Filed Validation Test Passed")
+        printc("[bold green][ SUCCESS ][/bold green] Required Filed Validation Test Passed")
 
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        printc("[bold red][ ERROR ][/bold red]", exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_invalid_inputs():
@@ -51,20 +51,19 @@ def test_invalid_inputs():
         dropdown.select_by_index(2)
 
         driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
-        time.sleep(2)
 
         errors = driver.find_elements(By.CLASS_NAME, "error-message")
         assert len(errors) > 0, "Invalid inputs were accepted!"
 
-        print("SUCCESS: Invalid Input Handling Test Passed")
-        driver.quit()
+        printc("[bold green][ SUCCESS ][/bold green] Invalid Input Handling Test Passed")
 
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
+        printc("[bold red][ ERROR ][/bold red]", exc_type, fname, exc_tb.tb_lineno)
 
 
-test_required_field()
-
-test_invalid_inputs()
+if __name__ == "__main__":
+    test_required_field()
+    test_invalid_inputs()
+    driver.quit()
