@@ -21,6 +21,8 @@ DRIVER.get("https://www.xenonstack.com/")
 
 def test_required_field():
     try:
+        DRIVER.refresh()
+        time.sleep(2)
         DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
@@ -32,7 +34,7 @@ def test_required_field():
         assert len(err) > 0, "Error message did not appear"
 
         printc("[bold green][ SUCCESS ][/bold green]"
-               "Required Filed Validation Test Passed")
+               " Required Filed Validation Test Passed")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -44,6 +46,12 @@ def test_required_field():
 
 def test_invalid_inputs():
     try:
+        DRIVER.refresh()
+        time.sleep(2)
+
+        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        time.sleep(1)
+
         DRIVER.find_element(By.NAME, "firstname").send_keys("John123")
         DRIVER.find_element(By.NAME, "lastname").send_keys("Doe@#")
         DRIVER.find_element(By.NAME, "email").send_keys("invalidemail")
@@ -72,13 +80,19 @@ def test_invalid_inputs():
 
 def test_injection_SQL():
     try:
+        DRIVER.refresh()
+        time.sleep(2)
+
+        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        time.sleep(1)
+
         payload = "' OR '1'='1'; --"
 
         DRIVER.find_element(By.NAME, "firstname").send_keys(payload)
         DRIVER.find_element(By.NAME, "lastname").send_keys(payload)
         DRIVER.find_element(By.NAME, "email").send_keys("test.site@corp.com")
-        DRIVER.find_element(By.NAME, "contact").send_keys("abcd1234")
-        DRIVER.find_element(By.NAME, "company").send_keys("testsite")
+        DRIVER.find_element(By.NAME, "contact").send_keys("06987654321")
+        DRIVER.find_element(By.NAME, "company").send_keys(payload)
         dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
         dropdown.select_by_index(2)
 
@@ -99,8 +113,44 @@ def test_injection_SQL():
                    exc_type, fname, exc_tb.tb_lineno)
 
 
+def test_XSS():
+    try:
+        DRIVER.refresh()
+        time.sleep(2)
+
+        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        time.sleep(1)
+
+        payload = "<script>alert('Vulnerabile to XSS')</script>"
+
+        DRIVER.find_element(By.NAME, "firstname").send_keys(payload)
+        DRIVER.find_element(By.NAME, "lastname").send_keys(payload)
+        DRIVER.find_element(By.NAME, "email").send_keys("test.site@corp.com")
+        DRIVER.find_element(By.NAME, "contact").send_keys("06987654321")
+        DRIVER.find_element(By.NAME, "company").send_keys(payload)
+        dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
+        dropdown.select_by_index(2)
+
+        DRIVER.find_element(By.XPATH,
+                            "//p[normalize-space()='Proceed Next']"
+                            ).click()
+
+        assert "error" in DRIVER.page_source, "XSS Vulnerability Detected"
+
+        printc("[bold green][ SUCCESS ][/bold green]"
+               " Cross Site Scripting Test Passed")
+
+    except Exception:
+        exc_type, _, exc_tb = sys.exc_info()
+        if exc_tb is not None:
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            printc("[bold red][ ERROR ][/bold red]",
+                   exc_type, fname, exc_tb.tb_lineno)
+
+
 if __name__ == "__main__":
     test_required_field()
     test_invalid_inputs()
     test_injection_SQL()
+    test_XSS()
     DRIVER.quit()
