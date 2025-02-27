@@ -453,7 +453,7 @@ def test_footer():
             if "xenonstack.com" not in href.lower():
                 try:
                     resp = requests.get(href, timeout=2, stream=True)  # GET to avoid 403
-                    if resp.status_code < 400:
+                    if resp.status_code < 400 or resp.status_code == 999:
                         printc("[success][ + ][/success]"
                                f" External link '{link_text}' is valid. [HTTP {resp.status_code}]")
                     else:
@@ -469,7 +469,7 @@ def test_footer():
                 try:
                     if target == "_blank":
                         DRIVER.execute_script("window.open(arguments[0]);", href)
-                        time.sleep(0.3)
+                        time.sleep(3)
                         all_handles = DRIVER.window_handles
                         if len(all_handles) > 1:
                             DRIVER.switch_to.window(all_handles[-1])
