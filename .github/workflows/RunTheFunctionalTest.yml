@@ -20,10 +20,16 @@ jobs:
           python-version: '3.13'
 
       - name: Setup Env
+        run: apt install python3-venv
         run: python3 venv env
 
       - name: Activate Env
-        run: source env/bin/activate
+        run: |
+          . env/bin/activate
+          echo PATH=$PATH >> $GITHUB_ENV
+
+      - name: Linters
+        run: pre-commit
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
