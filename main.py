@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
@@ -9,10 +10,23 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException
 # https://github.com/Textualize/rich?tab=readme-ov-file
-from rich import print as printc
-import time
+from rich.console import Console
+from rich.theme import Theme
+
+custom_theme = Theme({
+    "success": "bold bright_green",
+    "head": "bold bright_white",
+    "info": "dim cyan",
+    "warn": "bold magenta",
+    "bug": "bold bright_red",
+    "alrt": "dim red"
+})
+
+
+printc = Console(theme=custom_theme).print
 
 OPT = Options()
 OPT.add_argument("--start-maximized")
@@ -24,278 +38,308 @@ DRIVER = webdriver.Chrome(service=SERVICE, options=OPT)
 DRIVER.get("https://www.xenonstack.com/")
 
 # ======================
-# -- Helper Functions --
+# -- HELPER FUNCTIONS --
 # ======================
 
 
-def wait_for_navbar():
-    try:
-        WebDriverWait(DRIVER, 1).until(
-            EC.presence_of_element_located((
-                By.CSS_SELECTOR,
-                "ul.nav-pointers li.nav-li.item"
-            ))
+def get_nav_items():
+    WebDriverWait(DRIVER, 5).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "ul.nav-pointers")
         )
+    )
 
-    except TimeoutException:
-        printc("[bold bright_red][ ERROR ][/bold bright_red]"
-               "Navbar elements did not load in time!")
-        return
-    return True
+    return DRIVER.find_elements(
+        By.CSS_SELECTOR, "ul.nav-pointers li.nav-li.item"
+    )
+
+
+def injkt(payload):
+    printc("\t[warn][ - ][/warn] Sending ", payload,
+           " as Firstname")
+    DRIVER.find_element(By.NAME, "firstname").send_keys(payload)
+
+    printc("\t[warn][ - ][/warn] Sending ", payload,
+           " as Lastname")
+    DRIVER.find_element(By.NAME, "lastname").send_keys(payload)
+
+    DRIVER.find_element(By.NAME, "email").send_keys("test.site@corp.com")
+    DRIVER.find_element(By.NAME, "contact").send_keys("06987654321")
+
+    printc("\t[warn][ - ][/warn] Sending ", payload,
+           " as Company Name")
+    DRIVER.find_element(By.NAME, "company").send_keys(payload)
+
+    dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
+    dropdown.select_by_index(2)
+
 
 # ====================
-# -- TESTABLE CODES --
+# -- TEST FUNCTIONS --
 # ====================
 
 
 def test_required_field():
-    printc("[bold bright_white]TESTING ALL THE FIELDS WITH BAD DATA[/bold bright_white]")
+    printc("\n[head]Test 1: [/head]"
+           " Testing For Required Fileds.")
+
     # https://stackoverflow.com/questions/1278705/when-i-catch-an-exception-how-do-i-get-the-type-file-and-line-number
     try:
         DRIVER.refresh()
         time.sleep(2)
+        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
         DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
+        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
         DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        assert len(err) > 0, "[bold bright_red][ BUG ][/bold bright_red] Error message did not appear"
 
-        printc("[bold green][ SUCCESS ][/bold green]"
-               " Required Filed Validation Test Passed")
+        assert len(err) > 0, \
+            "[bug][ x ][/bug]" \
+            " Error message did not appear." \
+            " Test [bug]Failed[/bug]"
+
+        printc("[success][ + ][/success]"
+               " Required Filed Validation Test",
+               "[success]Passed[/success]."
+               " It does not let us go through without entering data.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bold bright_red][ ERROR ][/bold bright_red]",
+            printc("[bug][ x ][/bug]",
                    exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_invalid_inputs():
+    printc("\n[head]Test 2: [/head]"
+           " Testing For Invalid Inputs.")
+
     try:
         DRIVER.refresh()
         time.sleep(2)
 
+        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
         DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        DRIVER.find_element(By.NAME, "firstname").send_keys("John123")
-        DRIVER.find_element(By.NAME, "lastname").send_keys("Doe@#")
-        DRIVER.find_element(By.NAME, "email").send_keys("invalidemail")
-        DRIVER.find_element(By.NAME, "contact").send_keys("abcd1234")
-        DRIVER.find_element(By.NAME, "company").send_keys("Null Company")
+        fname = "John123"
+        lname = "Doe@#"
+        email = "invalidemail"
+        num = "abcd1234"
+        cmpny = "Null Company"
+
+        printc("[bold yellow][ * ][/bold yellow] Filling the Form")
+
+        printc("\t[warn][ - ][/warn] Entered FirstName: ",
+               fname)
+        DRIVER.find_element(By.NAME, "firstname").send_keys(fname)
+
+        printc("\t[warn][ - ][/warn] Entered Lastname: ",
+               lname)
+        DRIVER.find_element(By.NAME, "lastname").send_keys(lname)
+
+        printc("\t[warn][ - ][/warn] Entered Email: ", email)
+        DRIVER.find_element(By.NAME, "email").send_keys(email)
+
+        printc("\t[warn][ - ][/warn] Entered Contact: ", num)
+        DRIVER.find_element(By.NAME, "contact").send_keys(num)
+
+        printc("\t[warn][ - ][/warn] Entered Company: ", cmpny)
+        DRIVER.find_element(By.NAME, "company").send_keys(cmpny)
         dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
         dropdown.select_by_index(2)
 
+        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
         DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        assert len(err) > 0, "[bold bright_red][ BUG ][/bold bright_red] Invalid inputs were accepted!"
+        assert len(err) > 0, \
+            "[bug][ x ][/bug]" \
+            " Invalid inputs were accepted!"
 
-        printc("[bold green][ SUCCESS ][/bold green]"
-               " Invalid Input Handling Test Passed")
+        printc("[success][ + ][/success]"
+               " Input Validation Testing ",
+               "[success]Passed[/success]."
+               " Does not let us go through without providing proper inputs.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bold bright_red][ ERROR ][/bold bright_red]",
+            printc("[bug][ x ][/bug]",
                    exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_injection_SQL():
+    printc("\n[head]Test 3: [/head]"
+           " Testing For SQL Injection.")
     try:
         DRIVER.refresh()
         time.sleep(2)
 
+        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
         DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        payload = "' OR '1'='1'; --"
+        injkt("' OR '1'='1'; --")
 
-        DRIVER.find_element(By.NAME, "firstname").send_keys(payload)
-        DRIVER.find_element(By.NAME, "lastname").send_keys(payload)
-        DRIVER.find_element(By.NAME, "email").send_keys("test.site@corp.com")
-        DRIVER.find_element(By.NAME, "contact").send_keys("06987654321")
-        DRIVER.find_element(By.NAME, "company").send_keys(payload)
-        dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
-        dropdown.select_by_index(2)
-
+        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
         DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        assert "error" in DRIVER.page_source.lower(), "[bold bright_red][ BUG ][/bold bright_red] Vulnerability Detected"
+        assert "error" in DRIVER.page_source.lower(), \
+            "[bug][ x ][/bug] Vulnerability Detected"
 
-        printc("[bold green][ SUCCESS ][/bold green]"
+        printc("[success][ + ][/success]"
                " SQL Injection Detection Test Passed")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bold bright_red][ ERROR ][/bold bright_red]",
+            printc("[bug][ x ][/bug]",
                    exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_XSS():
+    printc("\n[head]Test 4: [/head]"
+           " Testing For Script Injection or Cross Site Scripting (XSS)")
     try:
         DRIVER.refresh()
         time.sleep(2)
 
+        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
         DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        payload = "<script>alert('Vulnerabile to XSS')</script>"
+        injkt("<script>alert('Vulnerabile to XSS')</script>")
 
-        DRIVER.find_element(By.NAME, "firstname").send_keys(payload)
-        DRIVER.find_element(By.NAME, "lastname").send_keys(payload)
-        DRIVER.find_element(By.NAME, "email").send_keys("test.site@corp.com")
-        DRIVER.find_element(By.NAME, "contact").send_keys("06987654321")
-        DRIVER.find_element(By.NAME, "company").send_keys(payload)
-        dropdown = Select(DRIVER.find_element(By.ID, "enterpriseIndustry"))
-        dropdown.select_by_index(2)
-
+        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
         DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        assert "error" in DRIVER.page_source, "[bold bright_red][ BUG ][/bold bright_red] XSS Vulnerability Detected"
+        assert "error" in DRIVER.page_source, \
+            "[bug][ x ][/bug]" \
+            " XSS Vulnerability Detected."
 
-        printc("[bold green][ SUCCESS ][/bold green]"
+        printc("[success][ + ][/success]"
                " Cross Site Scripting Test Passed")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bold bright_red][ ERROR ][/bold bright_red]",
+            printc("[bug][ x ][/bug]",
                    exc_type, fname, exc_tb.tb_lineno)
 
 
 def test_navbar():
+    printc("\n[head]Test 5: [/head]"
+           " Testing The Navigation Bar In The Website")
     try:
         DRIVER.refresh()
         time.sleep(2)
 
-        nav_links = {
-            "Foundry": None,
-            "Neural AI": "https://www.xenonstack.com/neural-ai/",
-            "NexaStack": "https://nexastack.ai/",
-            "ElixirData": "https://www.elixirdata.co/",
-            "MetaSecure": "https://metasecure.ai/",
-            "Akira AI": "https://akira.ai/",
-            "XAI": "https://www.xenonstack.ai/"
-        }
+        nav_items = get_nav_items()
 
-        retries = 3  # Retry to handle stale elements or loading issues
+        if not nav_items:
+            printc("[bug][ x ][/bug]"
+                   "NAVBAR DOES NOT WORK - No navbar items found!")
+            return
 
-        # Wait for the navbar to load
-        wait_for_navbar()
+        printc("[info]Available Navbar Items: [/info]",
+               [el.text for el in nav_items])
 
-        for link_text, expected_url in nav_links.items():
-            found = False  # Track if the link was found
-            for _ in range(retries):
+        for link_text in [
+            el.text.strip() for el in nav_items if el.text.strip()
+        ]:
+            try:
+                old_url = DRIVER.current_url
+                nav_items = get_nav_items()
+                item = next(
+                    (el for el in nav_items if el.text.strip() == link_text),
+                    None
+                )
+
+                if not item:
+                    printc("[bug][ x ][/bug]"
+                           " [alrt]BUG:[/alrt] NAVBAR DOES NOT WORK - ",
+                           link_text, " missing after reload")
+                    continue
+
                 try:
-                    WebDriverWait(DRIVER, 1).until(
-                        EC.presence_of_element_located((
-                            By.CSS_SELECTOR,
-                            "ul.nav-pointers li.nav-li.item"
-                        ))
-                    )
+                    link = item.find_element(By.TAG_NAME, "a")
+                    href = link.get_attribute("href")
 
-                    nav_items = DRIVER.find_elements(
-                                        By.CSS_SELECTOR,
-                                        "ul.nav-pointers li.nav-li.item"
-                    )
+                    if href:
+                        printc("[bold bright_yellow][ ! ][/bold bright_yellow]"
+                               " Clicking direct link: ", href)
 
-                    if not nav_items:
-                        printc("[bold bright_red][ ERROR ][/bold bright_red]"
-                               "Navbar items not found! Retrying.......")
-                        time.sleep(2)
-                        continue
-
-                    printc("[bold cyan]Available Navbar Items:[/bold cyan]",
-                           [el.text for el in nav_items])
-
-                    item = None
-                    for nav_item in nav_items:
-                        try:
-                            p_element = nav_item.find_element(By.TAG_NAME, "p")
-                            if link_text in p_element.text:
-                                item = nav_item
-                                break
-                        except Exception:
-                            continue
-
-                    if item:
-                        found = True
-                        DRIVER.execute_script(
-                            "arguments[0].scrollIntoView(true);", item
-                        )
-
-                        # **Using JavaScript Click Instead of Selenium Click**
-                        DRIVER.execute_script("arguments[0].click();", item)
-                        time.sleep(2)
-
-                        # **Wait for the navbar to reload before proceeding**
-                        WebDriverWait(DRIVER, 1).until(
-                            EC.presence_of_element_located((
-                                By.CSS_SELECTOR,
-                                "ul.nav-pointers li.nav-li.item"
-                            ))
-                        )
-
-                        # Verify if scrolling worked
-                        if expected_url and "xenonstack" in expected_url:
-                            assert expected_url in DRIVER.current_url, f"[bold bright_red][ BUG ][/bold bright_red] Navigation failed for {link_text}"
-                        else:
-                            printc(
-                                "[bold bright_yellow][ WARNING ]",
-                                "[/bold bright_yellow]", link_text,
-                                " is an external site. Cannot validate.")
-
-                        DRIVER.back()
-                        break
-
+                        DRIVER.execute_script("arguments[0].click();", link)
                     else:
-                        printc("[bold bright_red][ BUG ][/bold bright_red]",
-                               "Navigation for ", link_text,
-                               " does not work. The Link does not work")
-                        break
+                        printc("[bug][ x ][/bug]"
+                               " No href found for ", link_text,
+                               " trying JavaScript click.")
 
-                except TimeoutException:
-                    printc("[bold bright_red][ ERROR ][/bold bright_red]"
-                           "Timeout waiting for ",
-                           {link_text}, " to be clickable!")
-                    break
+                        DRIVER.execute_script("arguments[0].click();", item)
 
-            if not found:
-                printc("[bold bright_red][ BUG ][/bold bright_red]",
-                       "Navigation for ", {link_text},
-                       "failed. The Link does not work")
+                except NoSuchElementException:
+                    printc("[bug][ x ][/bug]"
+                           " [alrt]BUG:[/alrt] No <a> tag found for ",
+                           link_text, ". Using JavaScript click.")
 
-        printc("[bold green][ SUCCESS ][/bold green]",
-               "Navigation Test Completed")
+                    DRIVER.execute_script("arguments[0].click();", item)
 
-    except Exception as e:
-        exc_type, _, exc_tb = sys.exc_info()
-        if exc_tb is not None:
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bold bright_red][ ERROR ][/bold bright_red]", exc_type,
-                   fname, exc_tb.tb_lineno, str(e))
+                time.sleep(1)
+                new_url = DRIVER.current_url
+
+                if new_url != old_url and new_url != "data:,":
+                    printc("[success][ + ][/success]"
+                           " ", link_text, " works - Page changed")
+                else:
+                    printc("[bug][ x ][/bug]"
+                           " [alrt]BUG:[/alrt]",
+                           link_text, " did nothing or redirected to data:,")
+
+                DRIVER.forward()
+                time.sleep(1)
+
+            except StaleElementReferenceException:
+                printc("[bug][ x ][/bug]"
+                       " [alrt]BUG:[/alrt] Stale element error for ",
+                       link_text)
+
+            except TimeoutException:
+                printc("[bug][ x ][/bug]"
+                       " [alrt]BUG:[/alrt] Timeout waiting for ",
+                       link_text)
+
+            except Exception:
+                printc("[bug][ x ][/bug]"
+                       " [alrt]BUG:[/alrt] NAVBAR DOES NOT WORK")
+
+        printc("[success][ + ][/success]"
+               " Navbar Test Completed")
+
+    except Exception:
+        printc("[bug][ x ][/bug]"
+               " [alrt]BUG:[/alrt] NAVBAR DOES NOT WORK")
 
 
 if __name__ == "__main__":
-    # test_required_field()
-    # test_invalid_inputs()
-    # test_injection_SQL()
-    # test_XSS()
+    test_required_field()
+    test_invalid_inputs()
+    test_injection_SQL()
+    test_XSS()
     test_navbar()
     DRIVER.quit()
