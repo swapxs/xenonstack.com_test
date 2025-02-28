@@ -56,14 +56,17 @@ SCENARIO_3: Check website performace and ability to hold its gound under stress.
                         operating properly with a specific amount of time.
     PROPOSED_TESTS:
                         1. Validate the performance of the website's main page
-                           and other pages linked in the <body>.
-                        2. Validate the "404" Page not found error.
+                           and other pages linked in the <body> (test_load_speed).
+                        2. Validate the "404" Page not found error
+                           (test_invalid_page)
 
     EXPECTED_RESULT:    All the test case need to pass if any page takes too
                         long to respond, it is to be reported as a bug.
 ==================================================================================
 
 
++ TODO
+++ NOT IMPLEMENTED YET
 ==================================================================================
 SCENARIO_4: Check Mobile Compatibility
     TEST_CASE_ID:       FTC004
@@ -71,5 +74,6 @@ SCENARIO_4: Check Mobile Compatibility
                         dimension and check if all is working or not
     PROPOSED_TESTS:     Check SCENARIO_1, SCENARIO_2, SCENARIO_3 in a 428x926
                         aspect ratio
-    EXPECTED_RESULT:    Should perform the same as its full sized browser equivalent.
+    EXPECTED_RESULT:    Should perform the same as its full sized browser
+                        equivalent.
 ==================================================================================
