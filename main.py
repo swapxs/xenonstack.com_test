@@ -561,8 +561,9 @@ def test_footer():
     printc("[success][ + ][/success] Footer Test Completed")
 
 
-# CONSOLIDATED TESTS
-#
+# ==================================================================================
+# SCENARIO_1: A User want to get started with xenonstack
+# ==================================================================================
 
 def test_form():
     printc("\n[head]Test 1: [/head]"
@@ -575,12 +576,45 @@ def test_form():
     test_injection_XSS()
 
 
+# ==================================================================================
+# SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION
+#             BAR or the FOOTER LINKS
+# ==================================================================================
+
+
 def test_nav_and_foot():
     printc("\n[head]Test 2: [/head]"
            " Navigation Bar and Footer Tests.")
 
     test_navbar()
     test_footer()
+
+
+# ==================================================================================
+# SCENARIO_3: Check website performace and ability to hold its gound under
+#             stress.
+# ==================================================================================
+
+
+def test_load_speed():
+    pass
+
+
+def test_invalid_page():
+    pass
+
+
+def test_performance():
+    test_load_speed()
+    test_invalid_page()
+
+
+# ==================================================================================
+# SCENARIO_4: Check Mobile Compatibility
+# ==================================================================================
+
+def test_mobile():
+    pass
 
 
 if __name__ == "__main__":
@@ -594,6 +628,12 @@ if __name__ == "__main__":
     DRIVER.get("https://www.xenonstack.com/")
 
     WAIT = WebDriverWait(DRIVER, 5)
+
+    # ------ TESTS ------
     test_form()
     test_nav_and_foot()
+    test_performance()
+    test_mobile()
+    # ------ TESTS ------
+
     DRIVER.quit()
