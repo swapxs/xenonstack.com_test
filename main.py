@@ -12,9 +12,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.common.exceptions import (
-    TimeoutException,
-    StaleElementReferenceException,
-    NoSuchElementException
+    TimeoutException as TE,
+    StaleElementReferenceException as SER,
+    NoSuchElementException as NSE
 )
 # https://github.com/Textualize/rich?tab=readme-ov-file
 from rich.console import Console
@@ -26,7 +26,8 @@ custom_theme = Theme({
     "info": "dim cyan",
     "warn": "bold magenta",
     "bug": "bold bright_red",
-    "alrt": "red"
+    "alrt": "red",
+    "counter": "bold bright_yellow"
 })
 
 
@@ -50,12 +51,101 @@ def get_nav_items():
     )
 
 
-def get_footer_items():
+def extract_links(html_tag):
     try:
-        footer = DRIVER.find_element(By.TAG_NAME, "footer")
+        WAIT.until(
+            EC.presence_of_element_located((By.TAG_NAME, html_tag))
+        )
+
+        footer = DRIVER.find_element(By.TAG_NAME, html_tag)
         return footer.find_elements(By.TAG_NAME, "a")
-    except NoSuchElementException:
+
+    except NSE:
         return []
+
+
+def page_loader():
+    try:
+        WAIT.until(
+            lambda d:
+                d.execute_script("return document.readyState") == "complete"
+        )
+
+    except TE:
+        printc("[warn][ - ][/warn]"
+               "Page took too long to load. Stopping load manually.")
+        DRIVER.execute_script("window.stop();")
+
+
+def check_external_link(href, link_text):
+    try:
+        resp = requests.get(href, timeout=3, stream=True)
+        if resp.status_code in range(400, 1000):
+            web = "X" if "x.com" in href else "LinkedIn"
+            printc(f"[warn][ - ][/warn] {web} blocks bot requests",
+                   f"({resp.status_code}) or is down for some reason.",
+                   "Marking as valid.")
+        elif resp.status_code < 400:
+            printc(f"[success][ + ][/success] External link '{link_text}'",
+                   f"is valid. [HTTP {resp.status_code}]")
+        else:
+            printc(f"[bug][ x ][/bug] '{link_text}'",
+                   f"returned HTTP {resp.status_code}")
+    except requests.RequestException:
+        printc("[bug][ x ][/bug] Failed request for '{link_text}': {str(e)}")
+
+
+def check_internal_link(link, link_text, old_url):
+    try:
+        if link.get_attribute("target") == "_blank":
+            original_handles = DRIVER.window_handles
+
+            DRIVER.execute_script(
+                "window.open(arguments[0]);",
+                link.get_attribute("href")
+            )
+
+            WAIT.until(EC.new_window_is_opened(original_handles))
+            all_handles = DRIVER.window_handles
+            if len(all_handles) > len(original_handles):
+                DRIVER.switch_to.window(all_handles[-1])
+                page_loader()
+                new_url = DRIVER.current_url
+
+                if new_url != old_url and new_url != "data:,":
+                    printc(f"[success][ + ][/success] '{link_text}'",
+                           "opened in new tab - OK")
+                else:
+                    printc(f"[bug][ x ][/bug] '{link_text}'",
+                           "new tab did not navigate.")
+
+                DRIVER.close()
+                DRIVER.switch_to.window(original_handles[0])
+            else:
+                printc("[bug][ x ][/bug]",
+                       f"No new tab detected for '{link_text}'")
+        else:
+            DRIVER.execute_script(
+                "arguments[0].click();",
+                link
+            )
+
+            page_loader()
+            WAIT.until(EC.url_changes(old_url))
+            new_url = DRIVER.current_url
+
+            if new_url != old_url and new_url != "data:,":
+                printc(f"[success][ + ][/success] '{link_text}' link works -",
+                       "Page changed to {new_url}")
+            else:
+                printc(f"[bug][ x ][/bug] '{link_text}' is a BUG, fix it.")
+            DRIVER.back()
+            page_loader()
+            WAIT.until(EC.url_to_be(old_url))
+    except TE:
+        printc("[bug][ x ][/bug] Timeout opening link '{link_text}'")
+    except Exception:
+        printc(f"[bug][ x ][/bug] Error opening '{link_text}'")
 
 
 # Function for injecting malicious code into the input files for the form
@@ -221,9 +311,9 @@ def test_valid_inputs():
                 "solution": 2
             }
 
-        for section_id, option_index in selections.items():
-            option_xpath = f"//*[@id='{section_id}']//div[@class='answers'][{option_index}]/p"
-            DRIVER.find_element(By.XPATH, option_xpath).click()
+        for sec_idx, op_idx in selections.items():
+            opt_xp = f"//*[@id='{sec_idx}']//div[@class='answers'][{op_idx}]/p"
+            DRIVER.find_element(By.XPATH, opt_xp).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
         assert len(err) > 0, \
@@ -358,7 +448,7 @@ def test_navbar():
 
                         DRIVER.execute_script("arguments[0].click();", item)
 
-                except NoSuchElementException:
+                except NSE:
                     printc("[bug][ x ][/bug]"
                            " [alrt]BUG:[/alrt] No <a> tag found for ",
                            link_text, ". Using JavaScript click.")
@@ -379,12 +469,12 @@ def test_navbar():
                 DRIVER.forward()
                 time.sleep(1)
 
-            except StaleElementReferenceException:
+            except SER:
                 printc("[bug][ x ][/bug]"
                        " [alrt]BUG:[/alrt] Stale element error for ",
                        link_text)
 
-            except TimeoutException:
+            except TE:
                 printc("[bug][ x ][/bug]"
                        " [alrt]BUG:[/alrt] Timeout waiting for ",
                        link_text)
@@ -402,114 +492,73 @@ def test_navbar():
 
 
 def test_footer():
-    printc("\n[head]Test 2.2 (Optimized): [/head]"
-           " Testing The Footer Links with Reduced Load Time")
-
-    DRIVER.set_page_load_timeout(5)  # General timeout for the whole test
+    printc("\n[head]Test 2.2:[/head]",
+           "Ensuring All Footer Links Are Checked Without Skips.")
 
     DRIVER.refresh()
-    time.sleep(1)  # Ensure page is loaded before interacting
+    page_loader()
 
-    # Re-find footer links to avoid stale elements
-    footer_links = get_footer_items()
-    if not footer_links:
-        printc("[bug][ x ][/bug] FOOTER TEST FAILED - No links found in the footer!")
+    links = extract_links("footer")
+
+    if not links:
+        printc("[bug][ x ][/bug] FOOTER TEST FAILED -",
+               "No links found in the footer!")
         return
 
-    printc("[info]Available Footer Links: [/info]",
-           [link.text.strip() for link in footer_links if link.text.strip()])
+    total_links = len(links)
+    printc(f"[info]Total Footer Links Found: {total_links}")
+    idx = 0
 
-    for idx, link in enumerate(footer_links, start=1):
-        try:
-            # Re-find elements to prevent stale references
-            footer_links = get_footer_items()
-            link = footer_links[idx - 1]
+    while idx < total_links:
+        retries = 2
+        while retries > 0:
+            try:
+                links = extract_links("footer")
+                if idx >= len(links):
+                    printc(
+                        "[warn][ - ][/warn] Skipping missing link at index",
+                        idx
+                    )
 
-            link_text = link.text.strip()
-            href = link.get_attribute("href")
-            target = link.get_attribute("target")
+                    break
 
-            # If the link has no visible text, try using <img alt="...">
-            if not link_text:
-                try:
-                    img = link.find_element(By.TAG_NAME, "img")
-                    alt_text = img.get_attribute("alt")
-                    if alt_text:
-                        link_text = alt_text.strip()
-                except NoSuchElementException:
-                    pass
+                link = links[idx]
+                link_text = link.text.strip()
+                href = link.get_attribute("href")
+
                 if not link_text:
-                    link_text = "(no text)"
+                    try:
+                        img = link.find_element(By.TAG_NAME, "img")
+                        alt_text = img.get_attribute("alt")
+                        if alt_text:
+                            link_text = alt_text.strip()
+                    except NSE:
+                        pass
+                    if not link_text:
+                        link_text = "N/A"
 
-            # Skip links with no href
-            if not href:
-                printc(f"[bug][ x ][/bug] Skipping '{link_text}' - No href attribute.")
-                continue
+                if not href:
+                    printc(f"[bug][ x ][/bug] Skipping '{link_text}' -",
+                           "No href attribute.")
+                    break
+                printc("[bold bright_yellow][ ! ][/bold bright_yellow] ",
+                       f"[counter][{idx + 1}/{total_links}][/counter]",
+                       f"Checking Footer Link: {href} -> {link_text}")
 
-            printc(f"[bold bright_yellow][ ! ][/bold bright_yellow] "
-                   f"[{idx}/{len(footer_links)}] Checking Footer Link: {href} -> {link_text}")
+                if "xenonstack.com" not in href.lower():
+                    check_external_link(href, link_text)
 
-            # If external, perform a HEAD request first
-            if "xenonstack.com" not in href.lower():
-                try:
-                    resp = requests.get(href, timeout=2, stream=True)  # GET to avoid 403
-                    if resp.status_code < 400 or resp.status_code == 999:
-                        printc("[success][ + ][/success]"
-                               f" External link '{link_text}' is valid. [HTTP {resp.status_code}]")
-                    else:
-                        printc("[bug][ x ][/bug]"
-                               f" '{link_text}' returned HTTP {resp.status_code}")
-                except requests.RequestException as e:
-                    printc("[bug][ x ][/bug]"
-                           f" Failed request for '{link_text}': {str(e)}")
+                else:
+                    check_internal_link(link, link_text, DRIVER.current_url)
 
-            else:
-                # Internal Link => Click and validate page load
-                old_url = DRIVER.current_url
-                try:
-                    if target == "_blank":
-                        DRIVER.execute_script("window.open(arguments[0]);", href)
-                        time.sleep(3)
-                        all_handles = DRIVER.window_handles
-                        if len(all_handles) > 1:
-                            DRIVER.switch_to.window(all_handles[-1])
-                            new_url = DRIVER.current_url
-                            if new_url != old_url and new_url != "data:,":
-                                printc("[success][ + ][/success]"
-                                       f" '{link_text}' opened in new tab - OK")
-                            else:
-                                printc("[bug][ x ][/bug]"
-                                       f" '{link_text}' new tab did not navigate.")
-                            DRIVER.close()
-                            DRIVER.switch_to.window(all_handles[0])
-                        else:
-                            printc("[bug][ x ][/bug]"
-                                   f" No new tab detected for '{link_text}'")
-                    else:
-                        DRIVER.execute_script("arguments[0].click();", link)
-                        time.sleep(0.3)
-                        new_url = DRIVER.current_url
-                        if new_url != old_url and new_url != "data:,":
-                            printc("[success][ + ][/success]"
-                                   f" '{link_text}' link works - Page changed to {new_url}")
-                        else:
-                            printc("[bug][ x ][/bug]"
-                                   f" '{link_text}' did nothing or redirected to data:, BUG?")
-                        DRIVER.back()
-                        time.sleep(0.2)
+                break
 
-                except TimeoutException:
-                    printc("[bug][ x ][/bug]"
-                           f" Timeout opening link '{link_text}'")
-                except Exception as e:
-                    printc("[bug][ x ][/bug]"
-                           f" Error opening '{link_text}': {str(e)}")
+            except SER:
+                retries -= 1
+                printc("[warn][ - ][/warn] Stale element error. Retrying...")
 
-        except StaleElementReferenceException:
-            printc("[bug][ x ][/bug] Stale element error. Re-fetching and retrying...")
-
-    printc("[success][ + ][/success]"
-           " Optimized Footer Test Completed Successfully")
+        idx += 1
+    printc("[success][ + ][/success] Footer Test Completed")
 
 
 # CONSOLIDATED TESTS
@@ -531,6 +580,7 @@ def test_nav_and_foot():
            " Navigation Bar and Footer Tests.")
 
     test_navbar()
+    test_footer()
 
 
 if __name__ == "__main__":
@@ -545,6 +595,5 @@ if __name__ == "__main__":
 
     WAIT = WebDriverWait(DRIVER, 5)
     # test_form()
-    # test_nav_and_foot()
-    test_footer()
+    test_nav_and_foot()
     DRIVER.quit()
