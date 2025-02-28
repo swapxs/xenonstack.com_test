@@ -136,7 +136,7 @@ def check_internal_link(link, link_text, old_url):
 
             if new_url != old_url and new_url != "data:,":
                 printc(f"[success][ + ][/success] '{link_text}' link works -",
-                       "Page changed to {new_url}")
+                       f"Page changed to {new_url}")
             else:
                 printc(f"[bug][ x ][/bug] '{link_text}' is a BUG, fix it.")
             DRIVER.back()
