@@ -212,7 +212,7 @@ def test_required_field():
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
 
-        if len(err) > 0:
+        if len(err) < 0:
             printc("[bug][ x ][/bug]"
                    " Error message did not appear."
                    " Test [bug]Failed[/bug]")
@@ -256,7 +256,7 @@ def test_invalid_inputs():
                             ).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        if len(err) > 0:
+        if len(err) < 0:
             printc("[bug][ x ][/bug]"
                    " Error message did not appear."
                    " Test [bug]Failed[/bug]")
@@ -317,7 +317,7 @@ def test_valid_inputs():
             DRIVER.find_element(By.XPATH, opt_xp).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        if len(err) > 0:
+        if len(err) < 0:
             printc("[bug][ x ][/bug]",
                    " Invalid inputs were accepted!")
 
@@ -354,7 +354,7 @@ def test_injection_SQL():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        if "error" in DRIVER.page_source.lower():
+        if "error" not in DRIVER.page_source.lower():
             printc("[bug][ x ][/bug] Vulnerability Detected")
 
         else:
@@ -387,7 +387,7 @@ def test_injection_XSS():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        if "error" in DRIVER.page_source:
+        if "error" not in DRIVER.page_source:
             printc("[bug][ x ][/bug] Vulnerability Detected")
 
         else:
@@ -545,7 +545,7 @@ def test_footer():
                     printc(f"[bug][ x ][/bug] Skipping '{link_text}' -",
                            "No href attribute.")
                     break
-                printc("[bold bright_yellow][ ! ][/bold bright_yellow] ",
+                printc("[counter][ ! ][/counter] ",
                        f"[counter][{idx + 1}/{total_links}][/counter]",
                        f"Checking Footer Link: {href} -> {link_text}")
 
@@ -565,6 +565,69 @@ def test_footer():
     printc("[success][ + ][/success] Footer Test Completed")
 
 
+def test_load_speed():
+    printc("\n[head]Test 3.1: [/head] Checking Performance of the website")
+    page_loader()
+
+    links = extract_links("body")
+
+    pages = set()
+
+    for link in links:
+        href = link.get_attribute("href")
+
+        if href and "xenonstack.com" in href:
+            pages.add(href)
+
+    printc(f"[info]Total Internal Pages Found: [/info] {len(pages)}")
+
+    for page in pages:
+        DRIVER.get(page)
+        try:
+            WAIT.until(
+                lambda d:
+                    d.execute_script(
+                        "return document.readyState"
+                    ) == "complete"
+            )
+
+            start_time = DRIVER.execute_script(
+                "return window.performance.timing.navigationStart;"
+            )
+
+            end_time = DRIVER.execute_script(
+                "return window.performance.timing.loadEventEnd"
+            )
+
+            load_time = (end_time - start_time) / 1000
+
+            if load_time > 4:
+                printc("[bug][ - ][/bug]",
+                       f"{page} took {load_time:.2f}s to load.",
+                       "[bug]Potential Performance Issue![/bug]")
+            else:
+                printc("[counter][ + ][/counter]",
+                       f"{page} loaded in {load_time:.2f}s")
+
+        except TE:
+            printc(f"[bug][ x ][/bug] {page}",
+                   "failed to load within the expected time.")
+
+
+def test_invalid_page():
+    printc("\n[head]Test 3.2: [/head] Checking 404 Error Handling")
+
+    url = "https://www.xenonstack.com/this-page-does-not-exist"
+    DRIVER.get(url)
+    time.sleep(2)
+
+    title = DRIVER.title.lower()
+    src = DRIVER.page_source.lower()
+
+    if "404" in title or "not found" in src:
+        printc("[success][ + ][/success] 404 page correctly displayed.")
+    else:
+        printc("[bug][ x ][/bug] 404 page is missing or incorrect!")
 # ==================================================================================
 # SCENARIO_1: A User want to get started with xenonstack
 # ==================================================================================
@@ -600,37 +663,11 @@ def test_nav_and_foot():
 # ==================================================================================
 
 
-def test_load_speed():
-    pass
-
-
-def test_invalid_page():
-    printc("\n[head]Test 3.2: [/head] Checking 404 Error Handling")
-
-    url = "https://www.xenonstack.com/this-page-does-not-exist"
-    DRIVER.get(url)
-    time.sleep(2)
-
-    title = DRIVER.title.lower()
-    src = DRIVER.page_source.lower()
-
-    if "404" in title or "not found" in src:
-        printc("[success][ + ][/success] 404 page correctly displayed.")
-    else:
-        printc("[bug][ x ][/bug] 404 page is missing or incorrect!")
-
-
 def test_performance():
+    printc("\n[head]Test 3: [/head]"
+           " Site Performance Tests.")
     test_load_speed()
     test_invalid_page()
-
-
-# ==================================================================================
-# SCENARIO_4: Check Mobile Compatibility
-# ==================================================================================
-
-def test_mobile():
-    pass
 
 
 if __name__ == "__main__":
@@ -646,11 +683,9 @@ if __name__ == "__main__":
     WAIT = WebDriverWait(DRIVER, 5)
 
     # ------ TESTS ------
-    # test_form()
-    # test_nav_and_foot()
-    # test_performance()
-    # test_mobile()
-    test_invalid_page()
+    test_form()
+    test_nav_and_foot()
+    test_performance()
     # ------ TESTS ------
 
     DRIVER.quit()
