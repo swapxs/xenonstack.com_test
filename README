@@ -11,6 +11,7 @@ Target: https://www.xenonstack.com
 
 TEST SCENARIOS AND TEST CASES:
 
+==================================================================================
 SCENARIO_1: A User want to get started with xenonstack
     TEST_CASE_ID:       FTC001
     TEST_DESCRIPTION:   Test the 'GET STARTED' segment of the target and validate
@@ -28,8 +29,10 @@ SCENARIO_1: A User want to get started with xenonstack
 
     EXPECTED_RESULT:    The FORM should work as intended and pass only TEST 3, if
                         any other test(s) are passed, the RESULT will be failed.
+==================================================================================
 
 
+==================================================================================
 SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION BAR
             or the FOOTER LINKS
     TEST_CASE_ID:       FTC002
@@ -43,8 +46,10 @@ SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION BAR
 
     EXPECTED_RESULT:    The navbar and footer should work as intended. If found
                         any discrepencies in these, it is to be reported as a bug.
+==================================================================================
 
 
+==================================================================================
 SCENARIO_3: Check website performace and ability to hold its gound under stress.
     TEST_CASE_ID:       FTC003
     TEST_DESCRIPTION:   This step will check if the website is loading and
@@ -56,3 +61,15 @@ SCENARIO_3: Check website performace and ability to hold its gound under stress.
 
     EXPECTED_RESULT:    All the test case need to pass if any page takes too
                         long to respond, it is to be reported as a bug.
+==================================================================================
+
+
+==================================================================================
+SCENARIO_4: Check Mobile Compatibility
+    TEST_CASE_ID:       FTC004
+    TEST_DESCRIPTION:   Perform all the major tests in a mobile friendly
+                        dimension and check if all is working or not
+    PROPOSED_TESTS:     Check SCENARIO_1, SCENARIO_2, SCENARIO_3 in a 428x926
+                        aspect ratio
+    EXPECTED_RESULT:    Should perform the same as its full sized browser equivalent.
+==================================================================================
