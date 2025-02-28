@@ -594,6 +594,6 @@ if __name__ == "__main__":
     DRIVER.get("https://www.xenonstack.com/")
 
     WAIT = WebDriverWait(DRIVER, 5)
-    # test_form()
+    test_form()
     test_nav_and_foot()
     DRIVER.quit()
