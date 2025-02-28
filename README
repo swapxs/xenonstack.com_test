@@ -12,7 +12,7 @@ Target: https://www.xenonstack.com
 TEST SCENARIOS AND TEST CASES:
 
 SCENARIO_1: A User want to get started with xenonstack
-    TEST_CASE_ID:       `FTC001`
+    TEST_CASE_ID:       FTC001
     TEST_DESCRIPTION:   Test the 'GET STARTED' segment of the target and validate
                         as many fields as possible.
     PROPOSED_TESTS:
