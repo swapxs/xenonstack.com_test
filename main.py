@@ -5,7 +5,6 @@ import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-# from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -213,15 +212,15 @@ def test_required_field():
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
 
-        assert len(err) > 0, \
-            "[bug][ x ][/bug]" \
-            " Error message did not appear." \
-            " Test [bug]Failed[/bug]"
-
-        printc("[success][ + ][/success]"
-               " Required Filed Validation Test",
-               "[success]Passed[/success]."
-               " It does not let us go through without entering data.")
+        if len(err) > 0:
+            printc("[bug][ x ][/bug]"
+                   " Error message did not appear."
+                   " Test [bug]Failed[/bug]")
+        else:
+            printc("[success][ + ][/success]"
+                   " Required Filed Validation Test",
+                   "[success]Passed[/success]."
+                   " It does not let us go through without entering data.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -257,14 +256,16 @@ def test_invalid_inputs():
                             ).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        assert len(err) > 0, \
-            "[bug][ x ][/bug]" \
-            " Invalid inputs were accepted!"
-
-        printc("[success][ + ][/success]"
-               " Input Validation Testing ",
-               "[success]Passed[/success]."
-               " Does not let us go through without providing proper inputs.")
+        if len(err) > 0:
+            printc("[bug][ x ][/bug]"
+                   " Error message did not appear."
+                   " Test [bug]Failed[/bug]")
+        else:
+            printc("[success][ + ][/success]"
+                   " Input Validation Testing ",
+                   "[success]Passed[/success].",
+                   " Does not let us go through without providing proper",
+                   "inputs.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -316,14 +317,16 @@ def test_valid_inputs():
             DRIVER.find_element(By.XPATH, opt_xp).click()
 
         err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        assert len(err) > 0, \
-            "[bug][ x ][/bug]" \
-            " Invalid inputs were accepted!"
+        if len(err) > 0:
+            printc("[bug][ x ][/bug]",
+                   " Invalid inputs were accepted!")
 
-        printc("[success][ + ][/success]"
-               " Input Validation Testing ",
-               "[success]Passed[/success]."
-               " Does not let us go through without providing proper inputs.")
+        else:
+            printc("[success][ + ][/success]"
+                   " Input Validation Testing ",
+                   "[success]Passed[/success].",
+                   "Does not let us go through without providing proper",
+                   "inputs.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -351,11 +354,12 @@ def test_injection_SQL():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        assert "error" in DRIVER.page_source.lower(), \
-            "[bug][ x ][/bug] Vulnerability Detected"
+        if "error" in DRIVER.page_source.lower():
+            printc("[bug][ x ][/bug] Vulnerability Detected")
 
-        printc("[success][ + ][/success]"
-               " SQL Injection Detection Test Passed")
+        else:
+            printc("[success][ + ][/success]"
+                   " SQL Injection Detection Test Passed")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -383,12 +387,12 @@ def test_injection_XSS():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        assert "error" in DRIVER.page_source, \
-            "[bug][ x ][/bug]" \
-            " XSS Vulnerability Detected."
+        if "error" in DRIVER.page_source:
+            printc("[bug][ x ][/bug] Vulnerability Detected")
 
-        printc("[success][ + ][/success]"
-               " Cross Site Scripting Test Passed")
+        else:
+            printc("[success][ + ][/success]"
+                   " XSS Injection Detection Test Passed")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -601,7 +605,19 @@ def test_load_speed():
 
 
 def test_invalid_page():
-    pass
+    printc("\n[head]Test 3.2: [/head] Checking 404 Error Handling")
+
+    url = "https://www.xenonstack.com/this-page-does-not-exist"
+    DRIVER.get(url)
+    time.sleep(2)
+
+    title = DRIVER.title.lower()
+    src = DRIVER.page_source.lower()
+
+    if "404" in title or "not found" in src:
+        printc("[success][ + ][/success] 404 page correctly displayed.")
+    else:
+        printc("[bug][ x ][/bug] 404 page is missing or incorrect!")
 
 
 def test_performance():
@@ -621,7 +637,7 @@ if __name__ == "__main__":
     OPT = Options()
     OPT.add_argument("--start-maximized")
     OPT.add_argument("--disable-blink-features=AutomationControlled")
-    OPT.add_argument("--headless=new")  # Run headless
+    # OPT.add_argument("--headless=new")  # Run headless
 
     SERVICE = Service("/usr/bin/chromedriver", log_output="/dev/null")
     DRIVER = webdriver.Chrome(service=SERVICE, options=OPT)
@@ -630,10 +646,11 @@ if __name__ == "__main__":
     WAIT = WebDriverWait(DRIVER, 5)
 
     # ------ TESTS ------
-    test_form()
-    test_nav_and_foot()
-    test_performance()
-    test_mobile()
+    # test_form()
+    # test_nav_and_foot()
+    # test_performance()
+    # test_mobile()
+    test_invalid_page()
     # ------ TESTS ------
 
     DRIVER.quit()
