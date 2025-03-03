@@ -14,4 +14,3 @@ custom_theme = Theme({
 
 
 printc = Console(theme=custom_theme).print
-
