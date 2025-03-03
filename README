@@ -9,7 +9,7 @@ Selenium for functional tests
 Target: https://www.xenonstack.com
 
 
-TEST SCENARIOS AND TEST CASES:
+FUNCTIONAL TEST SCENARIOS AND TEST CASES:
 
 ==================================================================================
 SCENARIO_1: A User want to get started with xenonstack
@@ -22,10 +22,6 @@ SCENARIO_1: A User want to get started with xenonstack
                         2. Validate if they can go through the first part of the
                            form by entering wrong or BAD data (test_invalid_input)
                         3. Validate if the form works properly (test_valid_input)
-                        4. Validate if the form holds strong against any SQL
-                           injection attacks (test_injection_SQL)
-                        5. Validate if the form holds strong against any
-                           Cross-Site-Scripting (XSS) attacks (test_injection_XSS)
 
     EXPECTED_RESULT:    The FORM should work as intended and pass only TEST 3, if
                         any other test(s) are passed, the RESULT will be failed.
@@ -33,9 +29,28 @@ SCENARIO_1: A User want to get started with xenonstack
 
 
 ==================================================================================
-SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION BAR
-            or the FOOTER LINKS
+SCENARIO_2: A Malicious User wants to send some bad sql and javascript
+            commands to gain priviledged user access to the system. We need
+            to verify that the form does not allow us to do that.
     TEST_CASE_ID:       FTC002
+    TEST_DESCRIPTION:   Test the 'GET STARTED' segment of the target and validate
+                        if the form is secure from remote code execution
+                        vulnerability.
+    PROPOSED_TESTS:
+                        1. Validate if the form holds strong against any SQL
+                           injection attacks (test_injection_SQL)
+                        2. Validate if the form holds strong against any
+                           Cross-Site-Scripting (XSS) attacks (test_injection_XSS)
+
+    EXPECTED_RESULT:    The FORM should work as intended and does not process
+                        any scripts, if processed, the RESULT will be failed.
+==================================================================================
+
+
+==================================================================================
+SCENARIO_3: A User wants to visit daughter sites from either the NAVIGATION BAR
+            or the FOOTER LINKS
+    TEST_CASE_ID:       FTC003
     TEST_DESCRIPTION:   Test all the fields in the <nav> and <footer> tags and
                         come up with any bugs present in these fields.
     PROPOSED_TESTS:
@@ -50,8 +65,8 @@ SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION BAR
 
 
 ==================================================================================
-SCENARIO_3: Check website performace and ability to hold its gound under stress.
-    TEST_CASE_ID:       FTC003
+SCENARIO_4: Check website performace and ability to hold its gound under stress.
+    TEST_CASE_ID:       FTC004
     TEST_DESCRIPTION:   This step will check if the website is loading and
                         operating properly with a specific amount of time.
     PROPOSED_TESTS:
@@ -68,8 +83,8 @@ SCENARIO_3: Check website performace and ability to hold its gound under stress.
 + TODO
 ++ NOT IMPLEMENTED YET
 ==================================================================================
-SCENARIO_4: Check Mobile Compatibility
-    TEST_CASE_ID:       FTC004
+SCENARIO_5: Check Mobile Compatibility
+    TEST_CASE_ID:       FTC005
     TEST_DESCRIPTION:   Perform all the major tests in a mobile friendly
                         dimension and check if all is working or not
     PROPOSED_TESTS:     Check SCENARIO_1, SCENARIO_2, SCENARIO_3 in a 428x926
