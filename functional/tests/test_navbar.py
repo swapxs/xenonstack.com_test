@@ -4,7 +4,6 @@ from utils.rich_config import printc
 from utils.selenium_config import DRIVER
 from helpers.page_loader import page_loader
 from helpers.item_handlers import get_nav_items
-
 from selenium.common.exceptions import (
     TimeoutException as TE,
     StaleElementReferenceException as SER,
@@ -13,7 +12,7 @@ from selenium.common.exceptions import (
 
 
 def test_navbar():
-    printc("\n[head]Test 2.1: [/head]"
+    printc("\n[head]Test 3.1: [/head]"
            " Testing The Navigation Bar In The Website")
     try:
         DRIVER.get("https://xenonstack.com/")
@@ -103,4 +102,3 @@ def test_navbar():
     except Exception:
         printc("[bug][ x ][/bug]"
                " [alrt]BUG:[/alrt] NAVBAR DOES NOT WORK")
-
