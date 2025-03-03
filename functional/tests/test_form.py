@@ -1,71 +1,64 @@
 import os
 import sys
 import time
+import logging
+import pytest
 from selenium.webdriver.common.by import By
-from utils.rich_config import printc
-from utils.selenium_config import DRIVER
 from helpers.page_loader import page_loader
 from helpers.form_handler import fill_xenon_form
 
+logger = logging.getLogger(__name__)
 
-def check_validation_messages():
+def check_validation_messages(driver):
     try:
-        errors = DRIVER.find_elements(By.CLASS_NAME, "error-message")
+        errors = driver.find_elements(By.CLASS_NAME, "error-message")
         return any(error.is_displayed() for error in errors)
+
     except Exception:
         return False
 
 
-# This function tests if the fileds in the form are "required" by nature and
-# checks if we can proceed and see to content of the next page without filling
-# up the form.
-def test_required_field():
-    printc("[head]Test 1.1: [/head]"
-           " Testing For Required Fileds.")
+@pytest.mark.required_fields
+def test_required_field(driver, wait):
+    logger.info("Testing For Required Fields.")
 
-    # https://stackoverflow.com/questions/1278705/when-i-catch-an-exception-how-do-i-get-the-type-file-and-line-number
     try:
-        DRIVER.get("https://xenonstack.com/")
-        page_loader()
+        driver.get("https://xenonstack.com/")
+        page_loader(driver, wait)
 
-        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
-        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        logger.info("Clicking 'Get Started' button.")
+        driver.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
-        DRIVER.find_element(By.XPATH,
-                            "//p[normalize-space()='Proceed Next']"
-                            ).click()
+        logger.info("Clicking 'Proceed Next' button without filling form.")
+        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
         time.sleep(1)
 
-        if check_validation_messages():
-            printc("[success][ + ][/success]"
-                   " Required Filed Validation Test",
-                   "[success]Passed[/success]."
-                   " It does not let us go through without entering data.")
+        if check_validation_messages(driver):
+            logger.info("Required field validation test passed.")
+            assert True
         else:
-            printc("[bug][ x ][/bug]"
-                   " Error message did not appear."
-                   " Test [bug]Failed[/bug]")
+            logger.error("Error message did not appear. Test failed.")
+            assert False, "Error message did not appear."
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bug][ x ][/bug]",
-                   exc_type, fname, exc_tb.tb_lineno)
+            logger.error(f"Exception occurred: {exc_type}, {fname}, line {exc_tb.tb_lineno}")
+            assert False, "Exception encountered in test_required_field"
 
 
-def test_invalid_inputs():
-    printc("\n[head]Test 1.2: [/head]"
-           " Testing For Invalid Inputs.")
+@pytest.mark.invalid_input
+def test_invalid_inputs(driver, wait):
+    logger.info("Testing For Invalid Inputs.")
 
     try:
-        DRIVER.get("https://xenonstack.com/")
-        page_loader()
+        driver.get("https://xenonstack.com/")
+        page_loader(driver, wait)
 
-        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
-        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        logger.info("Clicking 'Get Started' button.")
+        driver.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
         fname = "John123"
@@ -74,43 +67,37 @@ def test_invalid_inputs():
         num = "abcd1234"
         cmpny = "Null Company"
 
-        fill_xenon_form(fname, lname, email, num, cmpny)
+        fill_xenon_form(driver, fname, lname, email, num, cmpny)
 
-        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
-        DRIVER.find_element(By.XPATH,
-                            "//p[normalize-space()='Proceed Next']"
-                            ).click()
-
+        logger.info("Clicking 'Proceed Next' button with invalid inputs.")
+        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
         time.sleep(1)
-        if check_validation_messages():
-            printc("[success][ + ][/success]"
-                   " Input Validation Testing ",
-                   "[success]Passed[/success].",
-                   " Does not let us go through without providing proper",
-                   "inputs.")
+
+        if check_validation_messages(driver):
+            logger.info("Input validation test passed.")
+            assert True
         else:
-            printc("[bug][ x ][/bug]"
-                   " Error message did not appear."
-                   " Test [bug]Failed[/bug]")
+            logger.error("Error message did not appear. Test failed.")
+            assert False, "Error message did not appear."
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bug][ x ][/bug]",
-                   exc_type, fname, exc_tb.tb_lineno)
+            logger.error(f"Exception occurred: {exc_type}, {fname}, line {exc_tb.tb_lineno}")
+            assert False, "Exception encountered in test_invalid_inputs"
 
 
-def test_valid_inputs():
-    printc("\n[head]Test 1.3: [/head]"
-           " Testing For Invalid Inputs.")
+@pytest.mark.valid_input
+def test_valid_inputs(driver, wait):
+    logger.info("Testing For Valid Inputs.")
 
     try:
-        DRIVER.get("https://xenonstack.com/")
-        page_loader()
+        driver.get("https://xenonstack.com/")
+        page_loader(driver, wait)
 
-        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
-        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        logger.info("Clicking 'Get Started' button.")
+        driver.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
         fname = "Jack"
@@ -119,40 +106,38 @@ def test_valid_inputs():
         num = "05987654312"
         cmpny = "Testify"
 
-        fill_xenon_form(fname, lname, email, num, cmpny)
+        fill_xenon_form(driver, fname, lname, email, num, cmpny)
 
-        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
-        DRIVER.find_element(By.XPATH,
-                            "//p[normalize-space()='Proceed Next']"
-                            ).click()
+        logger.info("Clicking 'Proceed Next' button with valid inputs.")
+        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
 
         selections = {
-                "agenticaiPlatform": 1,
-                "companySegment": 2,
-                "primaryFocus": 2,
-                "aiUsecase": 1,
-                "primaryChallenge": 5,
-                "companyInfra": 1,
-                "dataPlatform": 1,
-                "aiTransformation": 1,
-                "solution": 2
-            }
+            "agenticaiPlatform": 1,
+            "companySegment": 2,
+            "primaryFocus": 2,
+            "aiUsecase": 1,
+            "primaryChallenge": 5,
+            "companyInfra": 1,
+            "dataPlatform": 1,
+            "aiTransformation": 1,
+            "solution": 2
+        }
 
         for sec_idx, op_idx in selections.items():
             opt_xp = f"//*[@id='{sec_idx}']//div[@class='answers'][{op_idx}]/p"
-            DRIVER.find_element(By.XPATH, opt_xp).click()
+            driver.find_element(By.XPATH, opt_xp).click()
 
         time.sleep(1)
-        if check_validation_messages():
-            printc("[bug][ x ][/bug] Valid input test failed. Unexpected error"
-                   "messages detected!")
+        if check_validation_messages(driver):
+            logger.error("Valid input test failed. Unexpected validation messages detected.")
+            assert False, "Form validation failed with valid inputs."
         else:
-            printc("[success][ + ][/success] Valid input test passed."
-                   "No errors detected.")
+            logger.info("Valid input test passed. No errors detected.")
+            assert True
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bug][ x ][/bug]",
-                   exc_type, fname, exc_tb.tb_lineno)
+            logger.error(f"Exception occurred: {exc_type}, {fname}, line {exc_tb.tb_lineno}")
+            assert False, "Exception encountered in test_valid_inputs"

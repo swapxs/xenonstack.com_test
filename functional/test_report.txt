@@ -1,0 +1,315 @@
+
+Test 1:  Get Started Form Validation Tests.
+Test 1.1:  Testing For Required Fileds.
+[ * ] Get Started Button Clicked
+[ * ] Proceed Next Button Clicked
+[ + ] Required Filed Validation Test Passed. It does not let us go through without entering data.
+
+Test 1.2:  Testing For Invalid Inputs.
+[ * ] Get Started Button Clicked
+[ * ] Filling the Form
+        [ - ] Entered Firstname :  John123
+        [ - ] Entered Lastname :  Doe@#
+        [ - ] Entered Email :  invalidemail
+        [ - ] Entered Contact :  abcd1234
+        [ - ] Entered Company :  Null Company
+[ * ] Proceed Next Button Clicked
+[ + ] Input Validation Testing  Passed.  Does not let us go through without providing proper inputs.
+
+Test 1.3:  Testing For Invalid Inputs.
+[ * ] Get Started Button Clicked
+[ * ] Filling the Form
+        [ - ] Entered Firstname :  Jack
+        [ - ] Entered Lastname :  Doe
+        [ - ] Entered Email :  nucmpny@gmail.com
+        [ - ] Entered Contact :  05987654312
+        [ - ] Entered Company :  Testify
+[ * ] Proceed Next Button Clicked
+[ + ] Valid input test passed.No errors detected.
+
+Test 3:  Navigation Bar and Footer Tests.
+
+Test 3.1:  Testing The Navigation Bar In The Website
+Available Navbar Items: 
+['Foundry', 'Neural AI', 'NexaStack', 'ElixirData', 'MetaSecure', 'Akira AI', 'XAI']
+[ x ] BUG: No <a> tag found for  Foundry . Using JavaScript click.
+[ x ] BUG: Foundry  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  Neural AI . Using JavaScript click.
+[ x ] BUG: Neural AI  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  NexaStack . Using JavaScript click.
+[ x ] BUG: NexaStack  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  ElixirData . Using JavaScript click.
+[ x ] BUG: ElixirData  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  MetaSecure . Using JavaScript click.
+[ x ] BUG: MetaSecure  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  Akira AI . Using JavaScript click.
+[ x ] BUG: Akira AI  did nothing or redirected to data:,
+[ x ] BUG: No <a> tag found for  XAI . Using JavaScript click.
+[ x ] BUG: XAI  did nothing or redirected to data:,
+[ + ] Navbar Test Completed
+
+Test 3.2: Ensuring All Footer Links Are Checked Without Skips.
+Total Footer Links Found: 109
+[ ! ]  [1/109] Checking Footer Link: https://www.youtube.com/c/XenonStackOfficial -> Youtube
+[ + ] External link 'Youtube' is valid. [HTTP 200]
+[ ! ]  [2/109] Checking Footer Link: https://www.linkedin.com/company/xenonstack/ -> LinkedIn
+[ - ] LinkedIn blocks bot requests (999) or is down for some reason. Marking as valid.
+[ ! ]  [3/109] Checking Footer Link: https://github.com/xenonstack -> Github
+[ + ] External link 'Github' is valid. [HTTP 200]
+[ ! ]  [4/109] Checking Footer Link: https://twitter.com/xenonstack -> Twitter
+[ - ] LinkedIn blocks bot requests (400) or is down for some reason. Marking as valid.
+[ ! ]  [5/109] Checking Footer Link: https://medium.com/@xenonstack -> Medium
+[ + ] External link 'Medium' is valid. [HTTP 200]
+[ ! ]  [6/109] Checking Footer Link: https://www.instagram.com/teamxenonstack/ -> Instagram
+[ + ] External link 'Instagram' is valid. [HTTP 200]
+[ ! ]  [7/109] Checking Footer Link: https://www.xenonstack.com/artificial-intelligence/composite-ai/ -> Composite AI
+[ + ] 'Composite AI' link works - Page changed to https://www.xenonstack.com/artificial-intelligence/composite-ai/
+[ ! ]  [8/109] Checking Footer Link: https://www.xenonstack.com/artificial-intelligence/decision-ai/ -> Decision AI
+[ + ] 'Decision AI' link works - Page changed to https://www.xenonstack.com/artificial-intelligence/decision-ai/
+[ x ] Skipping 'AI Quality' - No href attribute.
+[ ! ]  [10/109] Checking Footer Link: https://www.xenonstack.com/generative-ai -> Generative AI
+[ + ] 'Generative AI' link works - Page changed to https://www.xenonstack.com/generative-ai/
+[ ! ]  [11/109] Checking Footer Link: https://www.xenonstack.com/artifical-intelligence/multimodal-ai/ -> Multimodal AI
+[ + ] 'Multimodal AI' link works - Page changed to https://www.xenonstack.com/artifical-intelligence/multimodal-ai/
+[ ! ]  [12/109] Checking Footer Link: https://www.xenonstack.com/artifical-intelligence/explainable-ai/ -> AI Assurance
+[ + ] 'AI Assurance' link works - Page changed to https://www.xenonstack.com/artificial-intelligence/explainable-ai/
+[ x ] Skipping 'MLOps' - No href attribute.
+[ x ] Skipping 'Physical AI' - No href attribute.
+[ ! ]  [15/109] Checking Footer Link: https://www.xenonstack.com/artifical-intelligence/ai-augmented-software-development/ -> Augmented Engineering
+[ + ] 'Augmented Engineering' link works - Page changed to https://www.xenonstack.com/artificial-intelligence/ai-augmented-software-development/
+[ ! ]  [16/109] Checking Footer Link: https://www.xenonstack.com/artificial-intelligence/generative-bi/ -> Generative BI
+[ + ] 'Generative BI' link works - Page changed to https://www.xenonstack.com/artificial-intelligence/generative-bi/
+[ ! ]  [17/109] Checking Footer Link: https://www.xenonstack.com/dataops/streaming-data-platform/ -> Streaming Data Platform
+[ + ] 'Streaming Data Platform' link works - Page changed to https://www.xenonstack.com/dataops/streaming-data-platform/
+[ ! ]  [18/109] Checking Footer Link: https://www.xenonstack.com/dataops/delta-lake/ -> Data Lakehouse
+[ + ] 'Data Lakehouse' link works - Page changed to https://www.xenonstack.com/dataops/delta-lake/
+[ ! ]  [19/109] Checking Footer Link: https://www.xenonstack.com/dataops/data-catalog/ -> Data Catalog
+[ + ] 'Data Catalog' link works - Page changed to https://www.xenonstack.com/dataops/data-catalog/
+[ ! ]  [20/109] Checking Footer Link: https://www.xenonstack.com/dataops/data-observability/ -> Data Observability
+[ + ] 'Data Observability' link works - Page changed to https://www.xenonstack.com/dataops/data-observability/
+[ ! ]  [21/109] Checking Footer Link: https://www.xenonstack.com/dataops/cloud-data-warehouse/ -> Cloud Data Warehouse
+[ + ] 'Cloud Data Warehouse' link works - Page changed to https://www.xenonstack.com/dataops/cloud-data-warehouse/
+[ ! ]  [22/109] Checking Footer Link: https://www.xenonstack.com/dataops/data-engineering/ -> Data Engineering
+[ + ] 'Data Engineering' link works - Page changed to https://www.xenonstack.com/dataops/data-engineering/
+[ x ] Skipping 'MetaData Management' - No href attribute.
+[ ! ]  [24/109] Checking Footer Link: https://www.xenonstack.com/dataops/augmented-data-quality/ -> Data Quality
+[ + ] 'Data Quality' link works - Page changed to https://www.xenonstack.com/dataops/augmented-data-quality/
+[ ! ]  [25/109] Checking Footer Link: https://www.xenonstack.com/dataops/real-time-analytics/ -> Real Time Analytics
+[ + ] 'Real Time Analytics' link works - Page changed to https://www.xenonstack.com/dataops/real-time-analytics/
+[ x ] Skipping 'Data Modernization' - No href attribute.
+[ ! ]  [27/109] Checking Footer Link: https://www.xenonstack.com/solutions/cloud-native-applications/ -> Cloud Native
+[ + ] 'Cloud Native' link works - Page changed to https://www.xenonstack.com/solutions/cloud-native-applications/
+[ ! ]  [28/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/automation-as-code -> Automation As Code
+[ + ] 'Automation As Code' link works - Page changed to https://www.xenonstack.com/cloud-native/automation-as-code/
+[ ! ]  [29/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/observability/ -> Observability
+[ + ] 'Observability' link works - Page changed to https://www.xenonstack.com/cloud-native/observability/
+[ ! ]  [30/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/finops/ -> FinOps
+[ + ] 'FinOps' link works - Page changed to https://www.xenonstack.com/cloud-native/finops/
+[ ! ]  [31/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/application-modernization/ -> Application Modernization
+[ + ] 'Application Modernization' link works - Page changed to https://www.xenonstack.com/cloud-native/application-modernization/
+[ ! ]  [32/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/devsecops/ -> DevSecOps
+[ + ] 'DevSecOps' link works - Page changed to https://www.xenonstack.com/cloud-native/devsecops/
+[ ! ]  [33/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/site-reliability-engineering/ -> Site Reliability Engineering
+[ + ] 'Site Reliability Engineering' link works - Page changed to https://www.xenonstack.com/cloud-native/site-reliability-engineering/
+[ ! ]  [34/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/progressive-delivery/ -> Progressive Delivery
+[ + ] 'Progressive Delivery' link works - Page changed to https://www.xenonstack.com/cloud-native/progressive-delivery/
+[ ! ]  [35/109] Checking Footer Link: https://www.xenonstack.com/enterprise/gitops/ -> GitOps
+[ + ] 'GitOps' link works - Page changed to https://www.xenonstack.com/enterprise/gitops/
+[ x ] Skipping 'Compliance as code' - No href attribute.
+[ ! ]  [37/109] Checking Footer Link: https://www.xenonstack.com/enterprise/value-stream-management/ -> Value Stream Management
+[ + ] 'Value Stream Management' link works - Page changed to https://www.xenonstack.com/enterprise/value-stream-management/
+[ x ] Skipping 'Policy as Code' - No href attribute.
+[ ! ]  [39/109] Checking Footer Link: https://www.xenonstack.com/cloud-native/telemetry-pipeline -> Telemetry Pipeline
+[ + ] 'Telemetry Pipeline' link works - Page changed to https://www.xenonstack.com/cloud-native/telemetry-pipeline/
+[ x ] Skipping 'Agentic Analytics' - No href attribute.
+[ x ] Skipping 'Agentic AI Systems' - No href attribute.
+[ x ] Skipping 'Process Intelligence' - No href attribute.
+[ ! ]  [43/109] Checking Footer Link: https://www.xenonstack.com/platform-engineering/developer-experience-platform/ -> Developer Experience
+[ + ] 'Developer Experience' link works - Page changed to https://www.xenonstack.com/platform-engineering/developer-experience-platform/
+[ ! ]  [44/109] Checking Footer Link: https://www.xenonstack.com/agentic-ai/ -> Autonomous Operations
+[ + ] 'Autonomous Operations' link works - Page changed to https://www.xenonstack.com/agentic-ai/
+[ ! ]  [45/109] Checking Footer Link: https://www.xenonstack.com/solutions/edge-and-vision-ai/ -> AI Vision at EDGE
+[ + ] 'AI Vision at EDGE' link works - Page changed to https://www.xenonstack.com/solutions/edge-and-vision-ai/
+[ x ] Skipping 'Compound AI System' - No href attribute.
+[ x ] Skipping 'GUI Agents' - No href attribute.
+[ x ] Skipping 'CMDB Management' - No href attribute.
+[ x ] Skipping 'ITSM' - No href attribute.
+[ x ] Skipping 'Network Automation' - No href attribute.
+[ x ] Skipping 'DataBricks AI Agents' - No href attribute.
+[ x ] Skipping 'SnowFlake AI Agents' - No href attribute.
+[ x ] Skipping 'ServiceNow AI Agents' - No href attribute.
+[ x ] Skipping 'AWS AI Agents' - No href attribute.
+[ ! ]  [55/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/microsoft-azure-ai-agents-actions/ -> Microsoft Azure AI Agents
+[ + ] 'Microsoft Azure AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/microsoft-azure-ai-agents-actions/
+[ ! ]  [56/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/salesforce-agents-actions/ -> SalesForce AI Agents
+[ + ] 'SalesForce AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/salesforce-agents-actions/
+[ x ] Skipping 'Microsoft Dynamics AI Agents' - No href attribute.
+[ ! ]  [58/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/mysql-agents-actions/ -> MySQL AI Agents
+[ + ] 'MySQL AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/mysql-agents-actions/
+[ x ] Skipping 'PostgreSQL AI Agents' - No href attribute.
+[ x ] Skipping 'Datadog AI Agents' - No href attribute.
+[ x ] Skipping 'DynaTrace AI Agents' - No href attribute.
+[ x ] Skipping 'Splunk AI Agents' - No href attribute.
+[ x ] Skipping 'BigQuery AI Agents' - No href attribute.
+[ ! ]  [64/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/sap-agents-actions/ -> SAP AI Agents
+[ + ] 'SAP AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/sap-agents-actions/
+[ ! ]  [65/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/infor-agents-actions/ -> Infor AI Agents
+[ + ] 'Infor AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/infor-agents-actions/
+[ ! ]  [66/109] Checking Footer Link: https://www.xenonstack.com/ai-agents/oracle-agents-actions/ -> Oracle AI Agents
+[ + ] 'Oracle AI Agents' link works - Page changed to https://www.xenonstack.com/ai-agents/oracle-agents-actions/
+[ x ] Skipping 'WorkDay AI Agents' - No href attribute.
+[ x ] Skipping 'Jira AI Agents' - No href attribute.
+[ ! ]  [69/109] Checking Footer Link: https://www.xenonstack.com/industries/aerospace/ -> Aerospace and Aviation
+[ + ] 'Aerospace and Aviation' link works - Page changed to https://www.xenonstack.com/industries/aerospace/
+[ ! ]  [70/109] Checking Footer Link: https://www.xenonstack.com/industries/banking/ -> Financial Services
+[ + ] 'Financial Services' link works - Page changed to https://www.xenonstack.com/industries/banking/
+[ ! ]  [71/109] Checking Footer Link: https://www.xenonstack.com/# -> Automotive And Industrial
+[ + ] 'Automotive And Industrial' link works - Page changed to https://www.xenonstack.com/#
+[ ! ]  [72/109] Checking Footer Link: https://www.xenonstack.com/industries/consumer-technology/ -> Consumer Tech
+[ + ] 'Consumer Tech' link works - Page changed to https://www.xenonstack.com/industries/consumer-technology/
+[ ! ]  [73/109] Checking Footer Link: https://www.xenonstack.com/industries/enterprise-technology/ -> Technology, Media and Telco
+[ + ] 'Technology, Media and Telco' link works - Page changed to https://www.xenonstack.com/industries/enterprise-technology/
+[ ! ]  [74/109] Checking Footer Link: https://www.xenonstack.com/industries/transportation-technology-solutions/ -> Supply Chain and Logistics
+[ + ] 'Supply Chain and Logistics' link works - Page changed to https://www.xenonstack.com/industries/transportation-technology-solutions/
+[ ! ]  [75/109] Checking Footer Link: https://www.xenonstack.com/industries/travel-hospitality/ -> Hospitality and Tourism
+[ + ] 'Hospitality and Tourism' link works - Page changed to https://www.xenonstack.com/industries/travel-hospitality/
+[ ! ]  [76/109] Checking Footer Link: https://www.xenonstack.com/industries/digital-manufacturing-services/ -> Discrete Manufacturing
+[ + ] 'Discrete Manufacturing' link works - Page changed to https://www.xenonstack.com/industries/digital-manufacturing-services/
+[ ! ]  [77/109] Checking Footer Link: https://www.xenonstack.com/managed-services/managed-ai-services/ -> AI Managed Services
+[ + ] 'AI Managed Services' link works - Page changed to https://www.xenonstack.com/managed-services/managed-ai-services/
+[ ! ]  [78/109] Checking Footer Link: https://www.xenonstack.com/managed-services/kubernetes/ -> Kubernetes Managed Services
+[ + ] 'Kubernetes Managed Services' link works - Page changed to https://www.xenonstack.com/managed-services/kubernetes/
+[ ! ]  [79/109] Checking Footer Link: https://www.xenonstack.com/managed-services/site-reliability-engineering/ -> SRE as a Service
+[ + ] 'SRE as a Service' link works - Page changed to https://www.xenonstack.com/cloud-native/site-reliability-engineering/
+[ ! ]  [80/109] Checking Footer Link: https://www.xenonstack.com/managed-services/big-data/ -> Data Managed Services
+[ + ] 'Data Managed Services' link works - Page changed to https://www.xenonstack.com/managed-services/big-data/
+[ x ] Skipping 'Analytics Managed Services' - No href attribute.
+[ ! ]  [82/109] Checking Footer Link: https://www.xenonstack.com/readiness-assessment/data-protection/ -> Data Protection
+[ + ] 'Data Protection' link works - Page changed to https://www.xenonstack.com/readiness-assessment/data-protection/
+[ ! ]  [83/109] Checking Footer Link: https://www.xenonstack.com/managed-services/on-premise-ai-cluster/ -> On-Premise AI
+[ + ] 'On-Premise AI' link works - Page changed to https://www.xenonstack.com/managed-services/on-premise-ai-cluster/
+[ x ] Skipping 'Private Cloud' - No href attribute.
+[ x ] Skipping 'Internal Developer Platform' - No href attribute.
+[ x ] Skipping 'AI Inference' - No href attribute.
+[ x ] Skipping 'Open-Source Data Platform' - No href attribute.
+[ x ] Skipping 'AI Trust Score' - No href attribute.
+[ x ] Skipping 'Autonomous SoC' - No href attribute.
+[ ! ]  [90/109] Checking Footer Link: https://www.xenonstack.com/solutions/digital-twin/ -> Digital Twin
+[ + ] 'Digital Twin' link works - Page changed to https://www.xenonstack.com/solutions/digital-twin/
+[ ! ]  [91/109] Checking Footer Link: https://www.xenonstack.com/readiness-assessment/ -> Readiness Assessment
+[ + ] 'Readiness Assessment' link works - Page changed to https://www.xenonstack.com/readiness-assessment/
+[ ! ]  [92/109] Checking Footer Link: https://www.xenonstack.com/talk-to-specialist/ -> Talk To Specialist
+[ + ] 'Talk To Specialist' link works - Page changed to https://www.xenonstack.com/talk-to-specialist/
+[ ! ]  [93/109] Checking Footer Link: https://www.xenonstack.com/about-us/ -> About Us
+[ + ] 'About Us' link works - Page changed to https://www.xenonstack.com/about-us/
+[ ! ]  [94/109] Checking Footer Link: https://www.xenonstack.com/about-us/leadership-team/ -> Leadership Team
+[ + ] 'Leadership Team' link works - Page changed to https://www.xenonstack.com/about-us/leadership-team/
+[ ! ]  [95/109] Checking Footer Link: https://www.xenonstack.com/about-us/tao-of-xenonstack/ -> TAO of XenonStack
+[ + ] 'TAO of XenonStack' link works - Page changed to https://www.xenonstack.com/about-us/tao-of-xenonstack/
+[ ! ]  [96/109] Checking Footer Link: https://www.xenonstack.com/about-us/how-we-grow/ -> How We Grow
+[ + ] 'How We Grow' link works - Page changed to https://www.xenonstack.com/about-us/how-we-grow/
+[ ! ]  [97/109] Checking Footer Link: https://www.xenonstack.com/about-us/how-we-work/ -> How We Work
+[ + ] 'How We Work' link works - Page changed to https://www.xenonstack.com/about-us/how-we-work/
+[ ! ]  [98/109] Checking Footer Link: https://www.xenonstack.com/careers/ -> Careers
+[ + ] 'Careers' link works - Page changed to https://www.xenonstack.com/careers/
+[ ! ]  [99/109] Checking Footer Link: https://www.xenonstack.com/xenonstack-academy/ -> XA - QSIR
+[ + ] 'XA - QSIR' link works - Page changed to https://www.xenonstack.com/xenonstack-academy/
+[ ! ]  [100/109] Checking Footer Link: https://www.xenonstack.com/blog -> Blog
+[ + ] 'Blog' link works - Page changed to https://www.xenonstack.com/blog
+[ ! ]  [101/109] Checking Footer Link: https://www.xenonstack.com/insights/ -> Insights
+[ + ] 'Insights' link works - Page changed to https://www.xenonstack.com/insights
+[ ! ]  [102/109] Checking Footer Link: https://www.xenonstack.com/use-cases -> Use Cases
+[ + ] 'Use Cases' link works - Page changed to https://www.xenonstack.com/use-cases
+[ ! ]  [103/109] Checking Footer Link: https://www.xenonstack.com/case-studies -> Case Study
+[ + ] 'Case Study' link works - Page changed to https://www.xenonstack.com/case-studies
+[ ! ]  [104/109] Checking Footer Link: https://www.xenonstack.com/videos/ -> Videos
+[ + ] 'Videos' link works - Page changed to https://www.xenonstack.com/videos/
+[ ! ]  [105/109] Checking Footer Link: https://www.xenonstack.com/e-book -> EBooks
+[ + ] 'EBooks' link works - Page changed to https://www.xenonstack.com/e-book
+[ ! ]  [106/109] Checking Footer Link: https://www.xenonstack.com/presentations/ -> Presentations
+[ + ] 'Presentations' link works - Page changed to https://www.xenonstack.com/presentations/
+[ ! ]  [107/109] Checking Footer Link: https://www.xenonstack.com/privacy-policy/ -> Privacy
+[ + ] 'Privacy' link works - Page changed to https://www.xenonstack.com/privacy-policy/
+[ ! ]  [108/109] Checking Footer Link: https://www.xenonstack.com/privacy-policy/ -> Terms
+[ + ] 'Terms' link works - Page changed to https://www.xenonstack.com/privacy-policy/
+[ ! ]  [109/109] Checking Footer Link: https://www.xenonstack.com/privacy-policy/ -> Trademark
+[ + ] 'Trademark' link works - Page changed to https://www.xenonstack.com/privacy-policy/
+[ + ] Footer Test Completed
+
+Test 4:  Site Performance Tests.
+
+Test 4.1:  Checking Performance of the website
+Total Internal Pages Found:  70
+[ + ] https://www.xenonstack.com/agentic-ai/ loaded in 0.98s
+[ + ] https://www.xenonstack.com/cloud-native/application-modernization/ loaded in 0.61s
+[ + ] https://www.xenonstack.com/blog loaded in 0.51s
+[ + ] https://www.xenonstack.com/solutions/edge-and-vision-ai/ loaded in 0.35s
+[ + ] https://www.xenonstack.com/cloud-native/telemetry-pipeline loaded in 0.26s
+[ + ] https://www.xenonstack.com/case-studies loaded in 0.28s
+[ + ] https://www.xenonstack.com/e-book loaded in 0.32s
+[ + ] https://www.xenonstack.com/industries/banking/ loaded in 0.81s
+[ + ] https://www.xenonstack.com/cloud-native/automation-as-code loaded in 0.26s
+[ + ] https://www.xenonstack.com/artificial-intelligence/decision-ai/ loaded in 0.21s
+[ + ] https://www.xenonstack.com/about-us/ loaded in 0.32s
+[ + ] https://www.xenonstack.com/industries/digital-manufacturing-services/ loaded in 0.27s
+[ + ] https://www.xenonstack.com/careers/ loaded in 0.34s
+[ + ] https://www.xenonstack.com/dataops/delta-lake/ loaded in 0.27s
+[ + ] https://www.xenonstack.com/ loaded in 0.21s
+[ + ] https://www.xenonstack.com/xenonstack-academy/ loaded in 0.23s
+[ + ] https://www.xenonstack.com/managed-services/big-data/ loaded in 0.23s
+[ + ] https://www.xenonstack.com/solutions/digital-twin/ loaded in 0.37s
+[ + ] https://www.xenonstack.com/dataops/streaming-data-platform/ loaded in 0.38s
+[ + ] https://www.xenonstack.com/about-us/leadership-team/ loaded in 0.19s
+[ + ] https://www.xenonstack.com/dataops/augmented-data-quality/ loaded in 0.28s
+[ + ] https://www.xenonstack.com/about-us/tao-of-xenonstack/ loaded in 0.20s
+[ + ] https://www.xenonstack.com/artificial-intelligence/generative-bi/ loaded in 0.24s
+[ + ] https://www.xenonstack.com/artifical-intelligence/explainable-ai/ loaded in 0.80s
+[ + ] https://www.xenonstack.com/cloud-native/progressive-delivery/ loaded in 0.21s
+[ + ] https://www.xenonstack.com/use-cases loaded in 0.52s
+[ + ] https://www.xenonstack.com/solutions/cloud-native-applications/ loaded in 0.34s
+[ + ] https://www.xenonstack.com/industries/travel-hospitality/ loaded in 0.15s
+[ + ] https://www.xenonstack.com/ai-agents/sap-agents-actions/ loaded in 0.70s
+[ + ] https://www.xenonstack.com/generative-ai loaded in 1.07s
+[ + ] https://www.xenonstack.com/industries/retail/ loaded in 0.53s
+[ + ] https://www.xenonstack.com/industries/aerospace/ loaded in 0.35s
+[ + ] https://www.xenonstack.com/dataops/data-observability/ loaded in 0.29s
+[ + ] https://www.xenonstack.com/artificial-intelligence/composite-ai/ loaded in 0.38s
+[ + ] https://www.xenonstack.com/managed-services/on-premise-ai-cluster/ loaded in 0.30s
+[ + ] https://www.xenonstack.com/industries/enterprise-technology/ loaded in 0.24s
+[ + ] https://www.xenonstack.com/artifical-intelligence/multimodal-ai/ loaded in 0.28s
+[ + ] https://www.xenonstack.com/industries/transportation-technology-solutions/ loaded in 0.19s
+[ + ] https://www.xenonstack.com/enterprise/value-stream-management/ loaded in 0.32s
+[ + ] https://www.xenonstack.com/about-us/how-we-work/ loaded in 0.34s
+[ + ] https://www.xenonstack.com/insights/ loaded in 0.54s
+[ + ] https://www.xenonstack.com/about-us/how-we-grow/ loaded in 0.28s
+[ + ] https://www.xenonstack.com/managed-services/managed-ai-services/ loaded in 0.24s
+[ + ] https://www.xenonstack.com/ai-agents/salesforce-agents-actions/ loaded in 0.23s
+[ + ] https://www.xenonstack.com/cloud-native/devsecops/ loaded in 0.38s
+[ + ] https://www.xenonstack.com/cloud-native/site-reliability-engineering/ loaded in 0.29s
+[ + ] https://www.xenonstack.com/industries/consumer-technology/ loaded in 0.67s
+[ + ] https://www.xenonstack.com/neural-ai/ loaded in 0.73s
+[ + ] https://www.xenonstack.com/ai-agents/mysql-agents-actions/ loaded in 0.28s
+[ + ] https://www.xenonstack.com/managed-services/site-reliability-engineering/ loaded in 0.25s
+[ + ] https://www.xenonstack.com/talk-to-specialist/ loaded in 0.27s
+[ + ] https://www.xenonstack.com/readiness-assessment/ loaded in 0.23s
+[ + ] https://www.xenonstack.com/cloud-native/observability/ loaded in 0.38s
+[ + ] https://www.xenonstack.com/ai-agents/microsoft-azure-ai-agents-actions/ loaded in 0.25s
+[ + ] https://www.xenonstack.com/artifical-intelligence/ai-augmented-software-development/ loaded in 1.44s
+[ + ] https://www.xenonstack.com/ai-agents/oracle-agents-actions/ loaded in 0.24s
+[ - ] https://www.xenonstack.com/readiness-assessment/data-protection/ took 40.75s to load. Potential Performance Issue!
+[ + ] https://www.xenonstack.com/platform-engineering/developer-experience-platform/ loaded in 1.44s
+[ + ] https://www.xenonstack.com/cloud-native/finops/ loaded in 0.95s
+[ + ] https://www.xenonstack.com/videos/ loaded in 0.84s
+[ + ] https://www.xenonstack.com/privacy-policy/ loaded in 0.26s
+[ + ] https://www.xenonstack.com/dataops/data-catalog/ loaded in 0.28s
+[ + ] https://www.xenonstack.com/dataops/data-engineering/ loaded in 0.58s
+[ + ] https://www.xenonstack.com/enterprise/gitops/ loaded in 0.44s
+[ + ] https://www.xenonstack.com/# loaded in 0.83s
+[ + ] https://www.xenonstack.com/dataops/cloud-data-warehouse/ loaded in 0.94s
+[ + ] https://www.xenonstack.com/ai-agents/infor-agents-actions/ loaded in 0.74s
+[ + ] https://www.xenonstack.com/dataops/real-time-analytics/ loaded in 0.29s
+[ + ] https://www.xenonstack.com/managed-services/kubernetes/ loaded in 0.79s
+[ + ] https://www.xenonstack.com/presentations/ loaded in 0.61s
+
+Test 4.2:  Checking 404 Error Handling
+[ + ] 404 page correctly displayed.

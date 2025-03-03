@@ -1,86 +1,76 @@
 import os
 import sys
 import time
+import logging
+import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.alert import Alert
-from utils.rich_config import printc
-from utils.selenium_config import DRIVER
 from helpers.page_loader import page_loader
 from helpers.form_handler import injkt
+from helpers.detect_vuln import detect_vuln
 
+logger = logging.getLogger(__name__)
 
-def detect_vuln():
+@pytest.mark.injection_SQL
+def test_injection_SQL(driver, wait):
+    logger.info("Test 2.1: Testing For SQL Injection.")
     try:
-        txt = Alert(DRIVER).text
-        Alert(DRIVER).dismiss()
-        printc(f"[bug][ x ][/bug] XSS Alert Detected! Message: {txt}")
-        return True
-    except Exception:
-        return False
+        driver.get("https://xenonstack.com/")
+        page_loader(driver, wait)
 
-
-def test_injection_SQL():
-    printc("\n[head]Test 2.1: [/head]"
-           " Testing For SQL Injection.")
-    try:
-        DRIVER.get("https://xenonstack.com/")
-        page_loader()
-
-        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
-        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        logger.info("Clicking 'Get Started' button.")
+        driver.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        injkt("' OR '1'='1'; --")
+        injkt(driver, "' OR '1'='1'; --")
 
-        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
-        DRIVER.find_element(By.XPATH,
-                            "//p[normalize-space()='Proceed Next']"
-                            ).click()
+        logger.info("Clicking 'Proceed Next' button.")
+        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
 
-        page_source = DRIVER.page_source.lower()
+        page_source = driver.page_source.lower()
+
         if "error" not in page_source and "invalid" not in page_source:
-            printc("[bug][ x ][/bug] Vulnerability Detected")
-
+            logger.error("Possible SQL injection vulnerability detected!")
+            assert False, "Possible SQL injection vulnerability: no error or invalid message found."
         else:
-            printc("[success][ + ][/success]"
-                   " SQL Injection Detection Test Passed")
+            logger.info("SQL Injection Detection Test Passed.")
+            assert True
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bug][ x ][/bug]",
-                   exc_type, fname, exc_tb.tb_lineno)
+            msg = f"Uncaught Exception in test_injection_SQL: {exc_type}, {fname}, line {exc_tb.tb_lineno}"
+            logger.error(msg)
+            assert False, msg
 
 
-def test_injection_XSS():
-    printc("\n[head]Test 2.2: [/head]"
-           " Testing For Script Injection or Cross Site Scripting (XSS)")
+@pytest.mark.injection_XSS
+def test_injection_XSS(driver, wait):
+    logger.info("Test 2.2: Testing For Script Injection or Cross-Site Scripting (XSS).")
     try:
-        DRIVER.get("https://xenonstack.com/")
-        page_loader()
+        driver.get("https://xenonstack.com/")
+        page_loader(driver, wait)
 
-        printc("[bold yellow][ * ][/bold yellow] Get Started Button Clicked")
-        DRIVER.find_element(By.CLASS_NAME, "nav-button").click()
+        logger.info("Clicking 'Get Started' button.")
+        driver.find_element(By.CLASS_NAME, "nav-button").click()
         time.sleep(1)
 
-        injkt("<script>alert('Vulnerabile to XSS')</script>")
+        injkt(driver, "<script>alert('Vulnerable to XSS')</script>")
 
-        printc("[bold yellow][ * ][/bold yellow] Proceed Next Button Clicked")
-        DRIVER.find_element(By.XPATH,
-                            "//p[normalize-space()='Proceed Next']"
-                            ).click()
+        logger.info("Clicking 'Proceed Next' button.")
+        driver.find_element(By.XPATH, "//p[normalize-space()='Proceed Next']").click()
 
-        if detect_vuln():
-            printc("[bug][ x ][/bug] Vulnerability Detected")
-
+        if detect_vuln(driver):
+            logger.error("XSS vulnerability detected!")
+            assert False, "XSS vulnerability found (alert was triggered)."
         else:
-            printc("[success][ + ][/success]"
-                   " XSS Injection Detection Test Passed")
+            logger.info("XSS Injection Detection Test Passed.")
+            assert True
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
         if exc_tb is not None:
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            printc("[bug][ x ][/bug]",
-                   exc_type, fname, exc_tb.tb_lineno)
+            msg = f"Uncaught Exception in test_injection_XSS: {exc_type}, {fname}, line {exc_tb.tb_lineno}"
+            logger.error(msg)
+            assert False, msg

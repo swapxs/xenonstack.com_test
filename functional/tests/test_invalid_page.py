@@ -1,18 +1,22 @@
-from utils.rich_config import printc
-from utils.selenium_config import DRIVER
+import logging
+import pytest
 from helpers.page_loader import page_loader
 
+logger = logging.getLogger(__name__)
 
-def test_invalid_page():
-    printc("\n[head]Test 4.2: [/head] Checking 404 Error Handling")
+@pytest.mark.invalid_page
+def test_invalid_page(driver, wait):
+    logger.info("Checking 404 Error Handling")
 
-    DRIVER.get("https://xenonstack.com/this-page-does-not-exist")
-    page_loader()
+    driver.get("https://xenonstack.com/this-page-does-not-exist")
+    page_loader(driver, wait)
 
-    title = DRIVER.title.lower()
-    src = DRIVER.page_source.lower()
+    title = driver.title.lower()
+    src = driver.page_source.lower()
 
     if "404" in title or "not found" in src:
-        printc("[success][ + ][/success] 404 page correctly displayed.")
+        logger.info("404 page correctly displayed.")
+        assert True
     else:
-        printc("[bug][ x ][/bug] 404 page is missing or incorrect!")
+        logger.error("404 page is missing or incorrect!")
+        assert False, "404 page is missing or incorrect!"
