@@ -15,7 +15,7 @@ from selenium.common.exceptions import (
 
 
 def test_footer():
-    printc("\n[head]Test 2.2:[/head]",
+    printc("\n[head]Test 3.2:[/head]",
            "Ensuring All Footer Links Are Checked Without Skips.")
 
     DRIVER.get("https://xenonstack.com/")
@@ -82,4 +82,3 @@ def test_footer():
 
         idx += 1
     printc("[success][ + ][/success] Footer Test Completed")
-
