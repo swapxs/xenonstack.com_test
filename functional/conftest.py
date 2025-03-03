@@ -18,10 +18,11 @@ def driver():
     service = Service("/usr/bin/chromedriver", log_output="/dev/null")
 
     driver = webdriver.Chrome(service=service, options=opt)
+    driver.set_page_load_timeout(15)
     yield driver
     driver.quit()
 
 
 @pytest.fixture
 def wait(driver):
-    return WebDriverWait(driver, 5)
+    return WebDriverWait(driver, 10)

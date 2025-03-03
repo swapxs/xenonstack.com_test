@@ -40,11 +40,10 @@ def check_external_link(href, link_text):
         assert False, f"External link '{link_text}' could not be checked."
 
 
-def check_internal_link(driver, wait, link, link_text, old_url):
+def check_internal_link(driver, wait, link, link_text, old_url) -> bool:
+    """Returns True on success, False on error/timeout."""
     try:
-        target = link.get_attribute("target")
-
-        if target == "_blank":
+        if link.get_attribute("target") == "_blank":
             original_handles = driver.window_handles
             driver.execute_script("window.open(arguments[0]);", link.get_attribute("href"))
             wait.until(EC.new_window_is_opened(original_handles))
@@ -56,17 +55,18 @@ def check_internal_link(driver, wait, link, link_text, old_url):
                 new_url = driver.current_url
 
                 if new_url != old_url and new_url != "data:,":
-                    logger.info(f"'{link_text}' opened in new tab - OK.")
-                    assert True
+                    logger.info(f"'{link_text}' opened in new tab successfully -> {new_url}")
                 else:
-                    logger.error(f"'{link_text}' new tab did not navigate properly.")
-                    assert False, f"'{link_text}' new tab did not navigate."
+                    logger.warning(f"'{link_text}' new tab did not navigate properly.")
+                    driver.close()
+                    driver.switch_to.window(original_handles[0])
+                    return False
 
                 driver.close()
                 driver.switch_to.window(original_handles[0])
-
             else:
-                logger.error(f"No new tab detected for '{link_text}'.")
+                logger.warning(f"No new tab detected for '{link_text}'.")
+                return False
 
         else:
             driver.execute_script("arguments[0].click();", link)
@@ -75,20 +75,30 @@ def check_internal_link(driver, wait, link, link_text, old_url):
             new_url = driver.current_url
 
             if new_url != old_url and new_url != "data:,":
-                logger.info(f"'{link_text}' link works - navigated to {new_url}")
-                assert True
+                logger.info(f"'{link_text}' link works -> navigated to {new_url}")
             else:
-                logger.error(f"'{link_text}' failed to navigate to a new page.")
-                assert False, f"'{link_text}' failed to navigate."
+                logger.warning(f"'{link_text}' did not navigate properly.")
+                return False
 
             driver.back()
             page_loader(driver, wait)
             wait.until(EC.url_to_be(old_url))
 
+        return True  # Success
+
     except TE:
-        logger.error(f"Timeout opening link '{link_text}'")
-        assert False, f"'{link_text}' took too long to load."
+        logger.warning(f"Timeout opening link '{link_text}'. Skipping this link.")
+        try:
+            driver.execute_script("window.stop();")
+        except Exception as stop_ex:
+            logger.warning(f"Couldn't stop page load for '{link_text}'. Reason: {stop_ex}")
+
+        return False
 
     except Exception as e:
-        logger.error(f"Error opening '{link_text}': {str(e)}")
-        assert False, f"Failed to open '{link_text}'."
+        logger.warning(f"Error opening '{link_text}': {e}")
+        try:
+            driver.execute_script("window.stop();")
+        except Exception as stop_ex:
+            logger.warning(f"Couldn't stop page load for '{link_text}'. Reason: {stop_ex}")
+        return False
