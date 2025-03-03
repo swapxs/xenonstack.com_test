@@ -7,6 +7,9 @@ from tests.test_form import (
     test_required_field,
     test_invalid_inputs,
     test_valid_inputs,
+)
+
+from tests.test_security import (
     test_injection_SQL,
     test_injection_XSS
 )
@@ -23,18 +26,30 @@ def test_form():
     test_required_field()
     test_invalid_inputs()
     test_valid_inputs()
+
+
+# ==================================================================================
+# SCENARIO_2: A Malicious User wants to send some bad sql and javascript
+#             commands to gain priviledged user access to the system. We need
+#             to verify that the form does not allow us to do that.
+# ==================================================================================
+
+
+def test_security():
+    printc("\n[head]Test 2: [/head]"
+           " Testing the Security of the website's Form.")
     test_injection_SQL()
     test_injection_XSS()
 
 
 # ==================================================================================
-# SCENARIO_2: A User wants to visit daughter sites from either the NAVIGATION
+# SCENARIO_3: A User wants to visit daughter sites from either the NAVIGATION
 #             BAR or the FOOTER LINKS
 # ==================================================================================
 
 
 def test_nav_and_foot():
-    printc("\n[head]Test 2: [/head]"
+    printc("\n[head]Test 3: [/head]"
            " Navigation Bar and Footer Tests.")
 
     test_navbar()
@@ -42,13 +57,13 @@ def test_nav_and_foot():
 
 
 # ==================================================================================
-# SCENARIO_3: Check website performace and ability to hold its gound under
+# SCENARIO_4: Check website performace and ability to hold its gound under
 #             stress.
 # ==================================================================================
 
 
 def test_performance():
-    printc("\n[head]Test 3: [/head]"
+    printc("\n[head]Test 4: [/head]"
            " Site Performance Tests.")
     test_load_speed()
     test_invalid_page()
