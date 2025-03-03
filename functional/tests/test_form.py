@@ -5,8 +5,15 @@ from selenium.webdriver.common.by import By
 from utils.rich_config import printc
 from utils.selenium_config import DRIVER
 from helpers.page_loader import page_loader
-
 from helpers.form_handler import fill_xenon_form
+
+
+def check_validation_messages():
+    try:
+        errors = DRIVER.find_elements(By.CLASS_NAME, "error-message")
+        return any(error.is_displayed() for error in errors)
+    except Exception:
+        return False
 
 
 # This function tests if the fileds in the form are "required" by nature and
@@ -29,18 +36,17 @@ def test_required_field():
         DRIVER.find_element(By.XPATH,
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
+        time.sleep(1)
 
-        err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-
-        if len(err) < 0:
-            printc("[bug][ x ][/bug]"
-                   " Error message did not appear."
-                   " Test [bug]Failed[/bug]")
-        else:
+        if check_validation_messages():
             printc("[success][ + ][/success]"
                    " Required Filed Validation Test",
                    "[success]Passed[/success]."
                    " It does not let us go through without entering data.")
+        else:
+            printc("[bug][ x ][/bug]"
+                   " Error message did not appear."
+                   " Test [bug]Failed[/bug]")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -75,17 +81,17 @@ def test_invalid_inputs():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        if len(err) < 0:
-            printc("[bug][ x ][/bug]"
-                   " Error message did not appear."
-                   " Test [bug]Failed[/bug]")
-        else:
+        time.sleep(1)
+        if check_validation_messages():
             printc("[success][ + ][/success]"
                    " Input Validation Testing ",
                    "[success]Passed[/success].",
                    " Does not let us go through without providing proper",
                    "inputs.")
+        else:
+            printc("[bug][ x ][/bug]"
+                   " Error message did not appear."
+                   " Test [bug]Failed[/bug]")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
@@ -136,17 +142,13 @@ def test_valid_inputs():
             opt_xp = f"//*[@id='{sec_idx}']//div[@class='answers'][{op_idx}]/p"
             DRIVER.find_element(By.XPATH, opt_xp).click()
 
-        err = DRIVER.find_elements(By.CLASS_NAME, "error-message")
-        if len(err) < 0:
-            printc("[bug][ x ][/bug]",
-                   " Invalid inputs were accepted!")
-
+        time.sleep(1)
+        if check_validation_messages():
+            printc("[bug][ x ][/bug] Valid input test failed. Unexpected error"
+                   "messages detected!")
         else:
-            printc("[success][ + ][/success]"
-                   " Input Validation Testing ",
-                   "[success]Passed[/success].",
-                   "Does not let us go through without providing proper",
-                   "inputs.")
+            printc("[success][ + ][/success] Valid input test passed."
+                   "No errors detected.")
 
     except Exception:
         exc_type, _, exc_tb = sys.exc_info()
