@@ -2,10 +2,21 @@ import os
 import sys
 import time
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.alert import Alert
 from utils.rich_config import printc
 from utils.selenium_config import DRIVER
 from helpers.page_loader import page_loader
 from helpers.form_handler import injkt
+
+
+def detect_vuln():
+    try:
+        txt = Alert(DRIVER).text
+        Alert(DRIVER).dismiss()
+        printc(f"[bug][ x ][/bug] XSS Alert Detected! Message: {txt}")
+        return True
+    except Exception:
+        return False
 
 
 def test_injection_SQL():
@@ -26,7 +37,8 @@ def test_injection_SQL():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        if "error" not in DRIVER.page_source.lower():
+        page_source = DRIVER.page_source.lower()
+        if "error" not in page_source and "invalid" not in page_source:
             printc("[bug][ x ][/bug] Vulnerability Detected")
 
         else:
@@ -59,7 +71,7 @@ def test_injection_XSS():
                             "//p[normalize-space()='Proceed Next']"
                             ).click()
 
-        if "error" not in DRIVER.page_source:
+        if detect_vuln():
             printc("[bug][ x ][/bug] Vulnerability Detected")
 
         else:
