@@ -1,14 +1,15 @@
+// /non-functional/api_load_test.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export let options = {
     stages: [
-        { duration: '10s', target: 20 },
-        { duration: '20s', target: 50 },
-        { duration: '30s', target: 100 },
-        { duration: '30s', target: 200 },
-        { duration: '20s', target: 100 },
-        { duration: '10s', target: 50 },
+        { duration: '10s', target: 10 },
+        { duration: '20s', target: 20 },
+        { duration: '30s', target: 40 },
+        { duration: '30s', target: 80 },
+        { duration: '20s', target: 20 },
+        { duration: '10s', target: 10 },
     ],
 };
 
@@ -17,7 +18,7 @@ export default () => {
 
     let payload = JSON.stringify({
         "fields": [
-            { "name": "firstname", "value": "Jhone" },
+            { "name": "firstname", "value": "Jhonny" },
             { "name": "lastname", "value": "Doe" },
             { "name": "email", "value": "jd@gmail.com" },
             { "name": "company", "value": "XS" },

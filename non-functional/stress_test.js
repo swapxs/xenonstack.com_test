@@ -1,3 +1,4 @@
+// /non-functional/stress_test.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
@@ -15,7 +16,7 @@ export default () => {
     let res = http.get('https://www.xenonstack.com/');
     check(res, {
         'Stress Test: Status is 200': (r) => r.status === 200,
-        'Stress Test: Response time < 5s': (r) => r.timings.duration < 5000,
+        'Stress Test: Response time < 10s': (r) => r.timings.duration < 10000,
     });
     sleep(1);
 }

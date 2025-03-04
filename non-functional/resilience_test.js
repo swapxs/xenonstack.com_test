@@ -1,3 +1,4 @@
+// /non-functional/resileience_test.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
