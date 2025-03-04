@@ -1,4 +1,4 @@
-# /helpers/item_handlers.py
+# /functional/helpers/item_handlers.py
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 

@@ -1,4 +1,4 @@
-# conftest.py
+# /functional/conftest.py
 
 import pytest
 from selenium import webdriver

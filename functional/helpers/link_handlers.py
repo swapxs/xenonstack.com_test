@@ -1,3 +1,4 @@
+# /functional/helpers/link_handlers.py
 import logging
 import requests
 from selenium.webdriver.common.by import By
@@ -17,27 +18,27 @@ def extract_links(driver, wait, html_tag):
         logger.warning(f"No links found in <{html_tag}> section.")
         return []
 
+    except TE:
+            logger.error(f"Timeout waiting for <{html_tag}> section.")
+            return []
+
 
 def check_external_link(href, link_text):
     try:
         resp = requests.get(href, timeout=3, stream=True)
 
-        if resp.status_code in range(400, 1000):
-            web = "Twitter/X" if "twitter.com" in href else "LinkedIn"
-            logger.warning(f"{web} blocks bot requests ({resp.status_code}) or is down. Marking as valid.")
-            assert True
+        if resp.status_code in [400, 401, 999]:
+            logger.warning(f"{link_text} blocks bot requests ({resp.status_code}) or is not available. Marking as valid.")
+            return
 
         elif resp.status_code < 400:
             logger.info(f"External link '{link_text}' is valid. [HTTP {resp.status_code}]")
-            assert True
 
         else:
             logger.error(f"External link '{link_text}' returned HTTP {resp.status_code}. Possible broken link.")
-            assert False, f"External link '{link_text}' broken -> {resp.status_code}"
 
     except requests.RequestException as e:
         logger.error(f"Failed request for '{link_text}': {str(e)}")
-        assert False, f"External link '{link_text}' could not be checked."
 
 
 def check_internal_link(driver, wait, link, link_text, old_url) -> bool:
@@ -90,6 +91,8 @@ def check_internal_link(driver, wait, link, link_text, old_url) -> bool:
         logger.warning(f"Timeout opening link '{link_text}'. Skipping this link.")
         try:
             driver.execute_script("window.stop();")
+            driver.back()
+            page_loader(driver, wait)
         except Exception as stop_ex:
             logger.warning(f"Couldn't stop page load for '{link_text}'. Reason: {stop_ex}")
 

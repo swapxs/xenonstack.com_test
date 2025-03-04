@@ -1,3 +1,4 @@
+# /functional/tests/test_footer.py
 import logging
 import pytest
 from selenium.webdriver.common.by import By
@@ -31,13 +32,14 @@ def test_footer(driver, wait):
     logger.info(f"Total Footer Links Found: {total_links}")
     idx = 0
 
+    failed = []
     while idx < total_links:
         retries = 2
         while retries > 0:
             try:
                 links = extract_links(driver, wait, "footer")
                 if idx >= len(links):
-                    logger.warning(f"Skipping missing link at index {idx}")
+                    logger.warning(f"Skipping missing links")
                     break
 
                 link = links[idx]
@@ -56,7 +58,9 @@ def test_footer(driver, wait):
                         link_text = "N/A"
 
                 if not href:
-                    logger.error(f"Skipping '{link_text}' - No href attribute.")
+                    msg = f"Skipping '{link_text}' - No href attribute."
+                    logger.error(msg)
+                    failed.append(msg)
                     break
 
                 logger.info(f"Checking Footer Link {idx + 1}/{total_links}: {href} -> {link_text}")
@@ -64,15 +68,22 @@ def test_footer(driver, wait):
                 if "xenonstack.com" not in href.lower():
                     check_external_link(href, link_text)
                 else:
-                    old_url = driver.current_url
-                    check_internal_link(driver, wait, link, link_text, old_url)
+                    if not check_internal_link(driver, wait, link, link_text, driver.current_url):
+                        msg = f"BUG: '{link_text}' link did not navigate correctly."
+                        logger.error(msg)
+                        failed.append(msg)
                 break
 
             except SER:
                 retries -= 1
-                logger.warning("Stale element error. Retrying...")
+                msg = "Stale element error. Retrying..."
+                logger.warning(msg)
+                failed.append(msg)
 
         idx += 1
+
+    if failed:
+        assert False, "Some footer links dont work as intended"
 
     logger.info("Footer Test Completed Successfully.")
     assert True

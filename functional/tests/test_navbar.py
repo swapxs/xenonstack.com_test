@@ -1,3 +1,4 @@
+# /functional/tests/test_navbar.py
 import time
 import logging
 import pytest
@@ -19,88 +20,90 @@ def test_navbar(driver, wait):
     failures = []
 
     try:
-        driver.get("https://xenonstack.com/")
+        driver.get("https://www.xenonstack.com/")
         page_loader(driver, wait)
 
         nav_items = get_nav_items(driver, wait)
 
         if not nav_items:
-            msg = "NAVBAR DOES NOT WORK - No navbar items found!"
+            msg = "NAVBAR TEST FAILED - No navbar items found!"
             logger.error(msg)
             failures.append(msg)
 
         else:
             logger.info(f"Available Navbar Items: {[el.text for el in nav_items]}")
 
-            for link_text in [el.text.strip() for el in nav_items if el.text.strip()]:
-                try:
-                    old_url = driver.current_url
-                    nav_items = get_nav_items(driver, wait)
-                    item = next((el for el in nav_items if el.text.strip() == link_text), None)
+            for item in nav_items:
 
-                    if not item:
-                        msg = f"NAVBAR DOES NOT WORK - item '{link_text}' missing after reload."
-                        logger.error(msg)
-                        failures.append(msg)
+                link_text = ""
+                try:
+                    link_text = item.text.strip()
+                    if not link_text:
                         continue
 
-                    try:
-                        link = item.find_element(By.TAG_NAME, "a")
-                        href = link.get_attribute("href")
+                    # Extract 'onclick' attribute
+                    onclick_attr = item.get_attribute("onclick")
+                    if not onclick_attr or "scrollToSection" not in onclick_attr:
+                        logger.warning(f"Skipping '{link_text}' - No scroll function detected.")
+                        continue
+                    
+                    # Extract section ID from onclick="scrollToSection('section-id')"
+                    section_id = onclick_attr.split("'")[1]  # Extract ID inside single quotes
+                    logger.info(f"Navbar item '{link_text}' maps to section '{section_id}'.")
 
-                        if href:
-                            logger.info(f"Clicking direct link: {href}")
-                            driver.execute_script("arguments[0].click();", link)
-                        else:
-                            msg = f"No href found for '{link_text}', trying JavaScript click."
-                            logger.warning(msg)
-                            failures.append(msg)
-                            driver.execute_script("arguments[0].click();", item)
+                    # Store initial scroll position
+                    start_scroll = driver.execute_script("return window.scrollY;")
 
-                    except NSE:
-                        msg = f"No <a> tag found for '{link_text}', using JavaScript click."
+                    # Click on the navbar item
+                    driver.execute_script("arguments[0].click();", item)
+                    time.sleep(2)  # Allow scrolling time
+
+                    # Check if the correct section is in view
+                    target_element = driver.find_element(By.ID, section_id)
+                    is_visible = driver.execute_script(
+                        "var rect = arguments[0].getBoundingClientRect();"
+                        "return (rect.top >= 0 && rect.bottom <= window.innerHeight);",
+                        target_element
+                    )
+
+                    end_scroll = driver.execute_script("return window.scrollY;")
+
+                    if is_visible or end_scroll != start_scroll:
+                        logger.info(f"'{link_text}' scrolled to '{section_id}' correctly.")
+                    else:
+                        msg = f"'{link_text}' did not scroll to '{section_id}' properly."
                         logger.warning(msg)
                         failures.append(msg)
-                        driver.execute_script("arguments[0].click();", item)
 
-                    time.sleep(1)
-                    new_url = driver.current_url
-
-                    if new_url != old_url and new_url != "data:,":
-                        logger.info(f"'{link_text}' works - Page changed.")
-                    else:
-                        msg = f"'{link_text}' did nothing or redirected to data:, old_url={old_url}, new_url={new_url}"
-                        logger.error(msg)
-                        failures.append(msg)
-
-                    driver.forward()
-                    time.sleep(1)
+                except NSE:
+                    msg = f"FAILED - No element found for '{link_text}'."
+                    logger.error(msg)
+                    failures.append(msg)
 
                 except SER:
-                    msg = f"Stale element error for '{link_text}'"
+                    msg = f"FAILED - Stale element reference for '{link_text}'. Retrying."
                     logger.warning(msg)
                     failures.append(msg)
 
                 except TE:
-                    msg = f"Timeout waiting for '{link_text}'"
+                    msg = f"FAILED - Timeout while waiting for '{link_text}'."
                     logger.error(msg)
                     failures.append(msg)
 
                 except Exception as e:
-                    msg = f"NAVBAR DOES NOT WORK on '{link_text}' - {e}"
+                    msg = f"FAILED - Error on '{link_text}': {e}"
                     logger.error(msg)
                     failures.append(msg)
 
         logger.info("Navbar Test Completed.")
 
     except Exception as e:
-        msg = f"NAVBAR DOES NOT WORK - Caught exception: {e}"
+        msg = f"NAVBAR TEST FAILED - Caught exception: {e}"
         logger.error(msg)
         failures.append(msg)
 
     if failures:
-        combined = "\n".join(failures)
-        assert False, f"Navbar test encountered errors:\n{combined}"
+        assert False, "Navbar Does not work as intended"
     else:
-        logger.info("No critical navbar errors found.")
+        logger.info("Navbar test completed successfully.")
         assert True

@@ -1,3 +1,4 @@
+# /functional/helpers/detect_vuln.py
 import logging
 from selenium.webdriver.common.alert import Alert
 
