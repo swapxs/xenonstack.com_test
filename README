@@ -7,18 +7,18 @@ Selenium for Functional Tests
 K6 for Non-Functional Tests
 
 
-Target: https://www.xenonstack.com
+Target 🌐: https://www.xenonstack.com
 
 
-TEST SCENARIOS AND TEST CASES(Functional=FTC, Non-Functional=NFTC):
+TEST SCENARIOS AND TEST CASES(Functional=FTC_, Non-Functional=NFTC):
 
 ==================================================================================
-TEST_ID:              TS001
+TEST_ID:              TS_001
 TEST_SCENARIO_TITLE:  A user wants to check the links in the navigation bar.
 TEST_DESCRIPTION:     A User wants to check any of the links in the navigation
                       bar pointing towards a product of the company.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC001
+    TEST_CASE_ID:            FTC_001
     TEST_CASE_TITLE:         Check Navigation Bar
     TEST_CASE_DESCRIPTION:   We need to verify if the links in the navigation
                              bar work or not.
@@ -32,12 +32,15 @@ TEST_DESCRIPTION:     A User wants to check any of the links in the navigation
     STATUS:                  Fail ❌
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS002
+
+
+==================================================================================
+TEST_ID:              TS_002
 TEST_SCENARIO_TITLE:  A user wants to fill the `Get Started` Form.
 TEST_DESCRIPTION:     A User wanted to `Get Started` with the company so they
                       decided to fill in the form and put in a request.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC002
+    TEST_CASE_ID:            FTC_002
     TEST_CASE_TITLE:         Check `Get Started` Form for Valid Input
     TEST_CASE_DESCRIPTION:   We need to verify if the form passes the valid
                              inputs.
@@ -55,7 +58,7 @@ TEST_DESCRIPTION:     A User wanted to `Get Started` with the company so they
     STATUS:                  Pass ✅
     PRIORITY:                High
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC003
+    TEST_CASE_ID:            FTC_003
     TEST_CASE_TITLE:         Check `Get Started` Form with no data
     TEST_CASE_DESCRIPTION:   We need to verify if the form works with empty data.
     TEST_CASE_STEPS:
@@ -69,7 +72,7 @@ TEST_DESCRIPTION:     A User wanted to `Get Started` with the company so they
     STATUS:                  Pass ✅
     PRIORITY:                High
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC004
+    TEST_CASE_ID:            FTC_004
     TEST_CASE_TITLE:         Check `Get Started` Form with invalid data
     TEST_CASE_DESCRIPTION:   We need to verify if the form accepts invalid
                              credentials.
@@ -85,13 +88,16 @@ TEST_DESCRIPTION:     A User wanted to `Get Started` with the company so they
     STATUS:                  Pass ✅
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS003
+
+
+==================================================================================
+TEST_ID:              TS_003
 TEST_SCENARIO_TITLE:  A malicious user wants access to the website and performs
                       injection attacks.
 TEST_DESCRIPTION:     A hacker attempts to gain privileged access by entering
                       malicious code into the form’s input fields.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC005
+    TEST_CASE_ID:            FTC_005
     TEST_CASE_TITLE:         Check `Get Started` Form with SQL Injection
     TEST_CASE_DESCRIPTION:   We need to verify if the form is safe from SQL
                              injection attacks.
@@ -107,7 +113,7 @@ TEST_DESCRIPTION:     A hacker attempts to gain privileged access by entering
     STATUS:                  Pass ✅
     PRIORITY:                High
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC006
+    TEST_CASE_ID:            FTC_006
     TEST_CASE_TITLE:         Check `Get Started` Form with Cross Site Scripting
                              (XSS)
     TEST_CASE_DESCRIPTION:   We need to verify if the form is safe from XSS
@@ -125,12 +131,15 @@ TEST_DESCRIPTION:     A hacker attempts to gain privileged access by entering
     STATUS:                  Pass ✅
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS004
+
+
+==================================================================================
+TEST_ID:              TS_004
 TEST_SCENARIO_TITLE:  A user wants to visit some links in the footer of the
                       website.
 TEST_DESCRIPTION:     Check if the links in the footer are all valid.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC007
+    TEST_CASE_ID:            FTC_007
     TEST_CASE_TITLE:         Check the footer of the page.
     TEST_CASE_DESCRIPTION:   We need to verify if all footer links work properly.
     TEST_CASE_STEPS:
@@ -143,12 +152,15 @@ TEST_DESCRIPTION:     Check if the links in the footer are all valid.
     STATUS:                  Fail ❌
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS005
+
+
+==================================================================================
+TEST_ID:              TS_005
 TEST_SCENARIO_TITLE:  A user wants to quickly visit the website's pages.
 TEST_DESCRIPTION:     Check if all the website links provide good performance
                       for an optimal user experience.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC008
+    TEST_CASE_ID:            FTC_008
     TEST_CASE_TITLE:         Check the load speed of each page
     TEST_CASE_DESCRIPTION:   We need to verify if all pages are responsive and
                              load under 4 seconds.
@@ -160,13 +172,16 @@ TEST_DESCRIPTION:     Check if all the website links provide good performance
     STATUS:                  Fail ❌
     PRIORITY:                Medium
 ==================================================================================
-TEST_ID:              TS006
+
+
+==================================================================================
+TEST_ID:              TS_006
 TEST_SCENARIO_TITLE:  A user by mistake has visited an unrecognized or invalid
                       page.
 TEST_DESCRIPTION:     Check if the website properly displays an error for
                       invalid pages.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            FTC009
+    TEST_CASE_ID:            FTC_009
     TEST_CASE_TITLE:         Check invalid pages
     TEST_CASE_DESCRIPTION:   We need to verify if a 404 error message is
                              displayed when visiting a non-existing page.
@@ -179,12 +194,15 @@ TEST_DESCRIPTION:     Check if the website properly displays an error for
     STATUS:                  Pass ✅
     PRIORITY:                Low
 ==================================================================================
-TEST_ID:              TS007
+
+
+==================================================================================
+TEST_ID:              TS_007
 TEST_SCENARIO_TITLE:  The company’s website is under heavy load every day.
 TEST_DESCRIPTION:     A large group of users constantly visit the website to
                       read the company blogs and articles.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            NFTC010
+    TEST_CASE_ID:            NFTC_010
     TEST_CASE_TITLE:         Check if the website can take a heavy load of users
                              properly.
     TEST_CASE_DESCRIPTION:   We need to perform a load test to verify if the
@@ -197,12 +215,15 @@ TEST_DESCRIPTION:     A large group of users constantly visit the website to
     STATUS:                  Fail ❌
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS008
+
+
+==================================================================================
+TEST_ID:              TS_008
 TEST_SCENARIO_TITLE:  Sudden Spike in userbase.
 TEST_DESCRIPTION:     Due to online sharing, a sudden spike in traffic occurs.
                       Verify if the website can handle this surge.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            NFTC011
+    TEST_CASE_ID:            NFTC_011
     TEST_CASE_TITLE:         Check if the website can take a sudden surge of
                              users.
     TEST_CASE_DESCRIPTION:   We need to check if the website can handle a
@@ -215,12 +236,15 @@ TEST_DESCRIPTION:     Due to online sharing, a sudden spike in traffic occurs.
     STATUS:                  Fail ❌
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS009
+
+
+==================================================================================
+TEST_ID:              TS_009
 TEST_SCENARIO_TITLE:  Increasing demand and traffic of the company’s user base.
 TEST_DESCRIPTION:     With growing popularity, check if the website can handle
                       increasing traffic.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            NFTC012
+    TEST_CASE_ID:            NFTC_012
     TEST_CASE_TITLE:         Check if the website can take an increasing amount
                              of network traffic over time.
     TEST_CASE_DESCRIPTION:   We need to verify if the website can sustain a
@@ -233,13 +257,16 @@ TEST_DESCRIPTION:     With growing popularity, check if the website can handle
     STATUS:                  Fail ❌
     PRIORITY:                High
 ==================================================================================
-TEST_ID:              TS010
+
+
+==================================================================================
+TEST_ID:              TS_010
 TEST_SCENARIO_TITLE:  Increasing demand for the company’s products leads to
                       higher `Get Started` form filling.
 TEST_DESCRIPTION:     Check if the form API can handle high stress, manage data
                       properly, and prevent duplicate submissions.
 ----------------------------------------------------------------------------------
-    TEST_CASE_ID:            NFTC013
+    TEST_CASE_ID:            NFTC_013
     TEST_CASE_TITLE:         Check if the form can handle large amounts of data
                              going in and out.
     TEST_CASE_DESCRIPTION:   Check the HubSpot API for the form that sends data
