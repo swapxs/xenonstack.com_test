@@ -3,92 +3,251 @@
 ================================================
 
 Tools used:
-Selenium for functional tests
+Selenium for Functional Tests
+K6 for Non-Functional Tests
 
 
 Target: https://www.xenonstack.com
 
 
-FUNCTIONAL TEST SCENARIOS AND TEST CASES:
+TEST SCENARIOS AND TEST CASES(Functional=FTC, Non-Functional=NFTC):
 
 ==================================================================================
-SCENARIO_1: A User want to get started with xenonstack
-    TEST_CASE_ID:       FTC001
-    TEST_DESCRIPTION:   Test the 'GET STARTED' segment of the target and validate
-                        as many fields as possible.
-    PROPOSED_TESTS:
-                        1. Validate if they can go through the first part of the
-                           form without entering any data (test_required_fields)
-                        2. Validate if they can go through the first part of the
-                           form by entering wrong or BAD data (test_invalid_input)
-                        3. Validate if the form works properly (test_valid_input)
-
-    EXPECTED_RESULT:    The FORM should work as intended and pass only TEST 3, if
-                        any other test(s) are passed, the RESULT will be failed.
+TEST_ID:              TS001
+TEST_SCENARIO_TITLE:  A user wants to check the links in the navigation bar.
+TEST_DESCRIPTION:     A User wants to check any of the links in the navigation
+                      bar pointing towards a product of the company.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC001
+    TEST_CASE_TITLE:         Check Navigation Bar
+    TEST_CASE_DESCRIPTION:   We need to verify if the links in the navigation
+                             bar work or not.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on all the links in the navigation bar
+    EXPECTED_RESULT:         The links in the navigation bar should redirect us
+                             to the desired page.
+    ACTUAL_RESULT:           Most of the navigation bar links do not work,
+                             which is not what we were expecting.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
 ==================================================================================
-
-
+TEST_ID:              TS002
+TEST_SCENARIO_TITLE:  A user wants to fill the `Get Started` Form.
+TEST_DESCRIPTION:     A User wanted to `Get Started` with the company so they
+                      decided to fill in the form and put in a request.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC002
+    TEST_CASE_TITLE:         Check `Get Started` Form for Valid Input
+    TEST_CASE_DESCRIPTION:   We need to verify if the form passes the valid
+                             inputs.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on `Get Started`
+                             3. Fill the Form with valid data
+                             4. Click Submit
+                             5. Click on various options on the next page of
+                                the form
+                             6. Click Submit
+    EXPECTED_RESULT:         The form should be submitted properly with no
+                             errors and an acknowledgement provided.
+    ACTUAL_RESULT:           Successfully submitted the form.
+    STATUS:                  Pass ✅
+    PRIORITY:                High
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC003
+    TEST_CASE_TITLE:         Check `Get Started` Form with no data
+    TEST_CASE_DESCRIPTION:   We need to verify if the form works with empty data.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on `Get Started`
+                             3. Click on Submit
+    EXPECTED_RESULT:         The form should not allow proceeding with empty
+                             data fields.
+    ACTUAL_RESULT:           The form provides error messages for any field
+                             that has not been filled properly.
+    STATUS:                  Pass ✅
+    PRIORITY:                High
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC004
+    TEST_CASE_TITLE:         Check `Get Started` Form with invalid data
+    TEST_CASE_DESCRIPTION:   We need to verify if the form accepts invalid
+                             credentials.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on `Get Started`
+                             3. Fill the form with invalid data
+                             4. Click on Submit
+    EXPECTED_RESULT:         The form should not allow invalid data and should
+                             prompt the user to enter valid information.
+    ACTUAL_RESULT:           The form provides error messages for any field
+                             with invalid data.
+    STATUS:                  Pass ✅
+    PRIORITY:                High
 ==================================================================================
-SCENARIO_2: A Malicious User wants to send some bad sql and javascript
-            commands to gain priviledged user access to the system. We need
-            to verify that the form does not allow us to do that.
-    TEST_CASE_ID:       FTC002
-    TEST_DESCRIPTION:   Test the 'GET STARTED' segment of the target and validate
-                        if the form is secure from remote code execution
-                        vulnerability.
-    PROPOSED_TESTS:
-                        1. Validate if the form holds strong against any SQL
-                           injection attacks (test_injection_SQL)
-                        2. Validate if the form holds strong against any
-                           Cross-Site-Scripting (XSS) attacks (test_injection_XSS)
-
-    EXPECTED_RESULT:    The FORM should work as intended and does not process
-                        any scripts, if processed, the RESULT will be failed.
+TEST_ID:              TS003
+TEST_SCENARIO_TITLE:  A malicious user wants access to the website and performs
+                      injection attacks.
+TEST_DESCRIPTION:     A hacker attempts to gain privileged access by entering
+                      malicious code into the form’s input fields.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC005
+    TEST_CASE_TITLE:         Check `Get Started` Form with SQL Injection
+    TEST_CASE_DESCRIPTION:   We need to verify if the form is safe from SQL
+                             injection attacks.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on `Get Started`
+                             3. Fill the form with the data: ' OR '1'='1'; --
+                             4. Click on Submit
+    EXPECTED_RESULT:         The form should display error messages and prevent
+                             the injection.
+    ACTUAL_RESULT:           The form successfully displays error messages for
+                             the injection attempt.
+    STATUS:                  Pass ✅
+    PRIORITY:                High
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC006
+    TEST_CASE_TITLE:         Check `Get Started` Form with Cross Site Scripting
+                             (XSS)
+    TEST_CASE_DESCRIPTION:   We need to verify if the form is safe from XSS
+                             attacks.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on `Get Started`
+                             3. Fill the form with the data:
+                                <script>alert('Vulnerable to XSS')</script>
+                             4. Click on Submit
+    EXPECTED_RESULT:         The form should display error messages and not
+                             parse the JavaScript code.
+    ACTUAL_RESULT:           The form successfully displays error messages for
+                             the malicious code.
+    STATUS:                  Pass ✅
+    PRIORITY:                High
 ==================================================================================
-
-
+TEST_ID:              TS004
+TEST_SCENARIO_TITLE:  A user wants to visit some links in the footer of the
+                      website.
+TEST_DESCRIPTION:     Check if the links in the footer are all valid.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC007
+    TEST_CASE_TITLE:         Check the footer of the page.
+    TEST_CASE_DESCRIPTION:   We need to verify if all footer links work properly.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Go to the end of the page
+                             3. Click all the links in the footer
+    EXPECTED_RESULT:         The links should open successfully without
+                             discrepancies.
+    ACTUAL_RESULT:           Some links are not available.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
 ==================================================================================
-SCENARIO_3: A User wants to visit daughter sites from either the NAVIGATION BAR
-            or the FOOTER LINKS
-    TEST_CASE_ID:       FTC003
-    TEST_DESCRIPTION:   Test all the fields in the <nav> and <footer> tags and
-                        come up with any bugs present in these fields.
-    PROPOSED_TESTS:
-                        1. Verify if all the fields in the navbar work properly
-                           or as intended (test_navbar)
-                        2. Verify if all the fields in the footer work properly
-                           or as intended (test_footer)
-
-    EXPECTED_RESULT:    The navbar and footer should work as intended. If found
-                        any discrepencies in these, it is to be reported as a bug.
+TEST_ID:              TS005
+TEST_SCENARIO_TITLE:  A user wants to quickly visit the website's pages.
+TEST_DESCRIPTION:     Check if all the website links provide good performance
+                      for an optimal user experience.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC008
+    TEST_CASE_TITLE:         Check the load speed of each page
+    TEST_CASE_DESCRIPTION:   We need to verify if all pages are responsive and
+                             load under 4 seconds.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com
+                             2. Click on all the links available on the website
+    EXPECTED_RESULT:         All subpages should load within 4 seconds.
+    ACTUAL_RESULT:           Some pages take more than 4 seconds to load.
+    STATUS:                  Fail ❌
+    PRIORITY:                Medium
 ==================================================================================
-
-
+TEST_ID:              TS006
+TEST_SCENARIO_TITLE:  A user by mistake has visited an unrecognized or invalid
+                      page.
+TEST_DESCRIPTION:     Check if the website properly displays an error for
+                      invalid pages.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            FTC009
+    TEST_CASE_TITLE:         Check invalid pages
+    TEST_CASE_DESCRIPTION:   We need to verify if a 404 error message is
+                             displayed when visiting a non-existing page.
+    TEST_CASE_STEPS:
+                             1. Visit xenonstack.com/non-existing
+    EXPECTED_RESULT:         Should display an error 404 message along with a
+                             notice that the page does not exist.
+    ACTUAL_RESULT:           Displays error 404 and a message stating that the
+                             page does not exist.
+    STATUS:                  Pass ✅
+    PRIORITY:                Low
 ==================================================================================
-SCENARIO_4: Check website performace and ability to hold its gound under stress.
-    TEST_CASE_ID:       FTC004
-    TEST_DESCRIPTION:   This step will check if the website is loading and
-                        operating properly with a specific amount of time.
-    PROPOSED_TESTS:
-                        1. Validate the performance of the website's main page
-                           and other pages linked in the <body> (test_load_speed).
-                        2. Validate the "404" Page not found error
-                           (test_invalid_page)
-
-    EXPECTED_RESULT:    All the test case need to pass if any page takes too
-                        long to respond, it is to be reported as a bug.
+TEST_ID:              TS007
+TEST_SCENARIO_TITLE:  The company’s website is under heavy load every day.
+TEST_DESCRIPTION:     A large group of users constantly visit the website to
+                      read the company blogs and articles.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            NFTC010
+    TEST_CASE_TITLE:         Check if the website can take a heavy load of users
+                             properly.
+    TEST_CASE_DESCRIPTION:   We need to perform a load test to verify if the
+                             platform can handle heavy traffic.
+    TEST_CASE_STEPS:         NIL
+    EXPECTED_RESULT:         The website should have minimal or no downtime
+                             with a response time under 10 seconds.
+    ACTUAL_RESULT:           Only 78% of the tests maintain a response time of
+                             10 seconds.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
 ==================================================================================
-
-
-+ TODO
-++ NOT IMPLEMENTED YET
+TEST_ID:              TS008
+TEST_SCENARIO_TITLE:  Sudden Spike in userbase.
+TEST_DESCRIPTION:     Due to online sharing, a sudden spike in traffic occurs.
+                      Verify if the website can handle this surge.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            NFTC011
+    TEST_CASE_TITLE:         Check if the website can take a sudden surge of
+                             users.
+    TEST_CASE_DESCRIPTION:   We need to check if the website can handle a
+                             sudden spike in traffic.
+    TEST_CASE_STEPS:         NIL
+    EXPECTED_RESULT:         Should maintain stable connectivity with response
+                             times under 10 seconds.
+    ACTUAL_RESULT:           Only 96% of users get a successful connection and
+                             only 29% get a response within 10 seconds.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
 ==================================================================================
-SCENARIO_5: Check Mobile Compatibility
-    TEST_CASE_ID:       FTC005
-    TEST_DESCRIPTION:   Perform all the major tests in a mobile friendly
-                        dimension and check if all is working or not
-    PROPOSED_TESTS:     Check SCENARIO_1, SCENARIO_2, SCENARIO_3 in a 428x926
-                        aspect ratio
-    EXPECTED_RESULT:    Should perform the same as its full sized browser
-                        equivalent.
+TEST_ID:              TS009
+TEST_SCENARIO_TITLE:  Increasing demand and traffic of the company’s user base.
+TEST_DESCRIPTION:     With growing popularity, check if the website can handle
+                      increasing traffic.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            NFTC012
+    TEST_CASE_TITLE:         Check if the website can take an increasing amount
+                             of network traffic over time.
+    TEST_CASE_DESCRIPTION:   We need to verify if the website can sustain a
+                             growing daily user base.
+    TEST_CASE_STEPS:         NIL
+    EXPECTED_RESULT:         The website should meet user base requirements
+                             with minimal downtime and response times under 10
+                             seconds.
+    ACTUAL_RESULT:           Not a single connection can be maintained.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
+==================================================================================
+TEST_ID:              TS010
+TEST_SCENARIO_TITLE:  Increasing demand for the company’s products leads to
+                      higher `Get Started` form filling.
+TEST_DESCRIPTION:     Check if the form API can handle high stress, manage data
+                      properly, and prevent duplicate submissions.
+----------------------------------------------------------------------------------
+    TEST_CASE_ID:            NFTC013
+    TEST_CASE_TITLE:         Check if the form can handle large amounts of data
+                             going in and out.
+    TEST_CASE_DESCRIPTION:   Check the HubSpot API for the form that sends data
+                             from the form to the server.
+    TEST_CASE_STEPS:         NIL
+    EXPECTED_RESULT:         The form should avoid duplicate data and process
+                             each user's submission properly.
+    ACTUAL_RESULT:           Only 47% of submissions were successful.
+    STATUS:                  Fail ❌
+    PRIORITY:                High
 ==================================================================================
